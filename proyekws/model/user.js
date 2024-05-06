@@ -1,7 +1,8 @@
-const { Sequelize, DataTypes } = require('sequelize');
+const { Sequelize, DataTypes, Model } = require('sequelize');
 const db = require('../config/sequelize'); // Sesuaikan path ke file db Anda
 
-const User = db.define('User', {
+class User extends Model{}
+User.init({
     id_user: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -40,18 +41,30 @@ const User = db.define('User', {
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: DataTypes.NOW
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: DataTypes.NOW
     }
 }, {
+    sequelize: db, // Sambungan ke database
+    modelName: 'User', // Nama model
     tableName: 'user', // Nama tabel di database
     timestamps: false, // Menghapus otomatis tambah kolom createdAt dan updatedAt oleh Sequelize
     underscored: true, // Menggunakan snake_case untuk nama kolom dan tabel
     freezeTableName: true // Mencegah Sequelize mengubah nama tabel secara otomatis
 });
+
+async function checkAdmin(id_user){
+    let findUserById = await User.findOne({where:{id_user: id_user}})
+    if(findUserById.role == 'admin'){
+        return true
+    }
+    else{
+        return false
+    }
+}
 
 module.exports = User;
