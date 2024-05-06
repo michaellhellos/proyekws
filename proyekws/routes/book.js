@@ -24,7 +24,7 @@ router.get('/buku/explore/list', async(req, res)=>{
                 type: 'all'
             }, //tolong key e garapen ya meeee, aku ga subscription mangaverse soale :v --Thio
             headers:{
-                'X-RapidAPI-Key': 'SIGN-UP-FOR-KEY',
+                'X-RapidAPI-Key': '0a78375602msh1dcf019f6b6df08p1209d1jsneb4ee786ad76',
                 'X-RapidAPI-Host': 'mangaverse-api.p.rapidapi.com'
             }
         })

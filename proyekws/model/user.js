@@ -1,7 +1,22 @@
 const { Sequelize, DataTypes, Model } = require('sequelize');
-const db = require('../config/sequelize'); // Sesuaikan path ke file db Anda
+const db = require('../config/sequelize');
 
-class User extends Model{}
+class User extends Model {
+    static async addSaldo(id_user, saldoToAdd) {
+        try {
+            const user = await this.findByPk(id_user);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            user.saldo += saldoToAdd;
+            await user.save();
+            return user;
+        } catch (error) {
+            throw error;
+        }
+    }
+}
+
 User.init({
     id_user: {
         type: DataTypes.INTEGER,
@@ -38,33 +53,27 @@ User.init({
         type: DataTypes.ENUM('admin', 'anggota'),
         allowNull: false
     },
+    saldo: {
+        type: DataTypes.DECIMAL(10, 2),
+        defaultValue: 0.00 // Kolom saldo dengan default 0.00
+    },
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
     }
 }, {
-    sequelize: db, // Sambungan ke database
-    modelName: 'User', // Nama model
-    tableName: 'user', // Nama tabel di database
-    timestamps: false, // Menghapus otomatis tambah kolom createdAt dan updatedAt oleh Sequelize
-    underscored: true, // Menggunakan snake_case untuk nama kolom dan tabel
-    freezeTableName: true // Mencegah Sequelize mengubah nama tabel secara otomatis
+    sequelize: db,
+    modelName: 'User',
+    tableName: 'user',
+    timestamps: false,
+    underscored: true,
+    freezeTableName: true
 });
-
-async function checkAdmin(id_user){
-    let findUserById = await User.findOne({where:{id_user: id_user}})
-    if(findUserById.role == 'admin'){
-        return true
-    }
-    else{
-        return false
-    }
-}
 
 module.exports = User;

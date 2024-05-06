@@ -9,56 +9,59 @@ router.get('/', (req, res) => {
 });
 
 router.post('/register', async (req, res) => {
-  const { nama, email, password, nomer_telepon, dob, gender, role } = req.body;
-
-  try {
-      let user = await User.findOne({ where: { email: email } });
-
-      if (user) {
-          return res.status(400).json({ message: 'Email sudah terdaftar' });
-      }
-
-      const salt = await bcrypt.genSalt(10);
-      const hashedPassword = await bcrypt.hash(password, salt);
-
-      user = await User.create({
-          nama,
-          email,
-          password: hashedPassword,
-          nomer_telepon,
-          dob,
-          gender,
-          role
-      });
-
-      // Menghilangkan password dari respons
-      const userData = {
-          id_user: user.id_user,
-          nama: user.nama,
-          email: user.email,
-          nomer_telepon: user.nomer_telepon,
-          dob: user.dob,
-          gender: user.gender,
-          role: user.role
-      };
-
-      const payload = {
-          user: userData
-      };
-
-      jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
-          if (err) {
-              console.error(err.message);
-              return res.status(500).json({ message: 'Server Error' });
-          }
-          res.json({ token, user: userData });
-      });
-
-  } catch (error) {
-      console.error(error.message);
-      res.status(500).json({ message: 'Server Error' });
-  }
-});
+    const { nama, email, password, nomer_telepon, dob, gender, role, saldoToAdd } = req.body;
+  
+    try {
+        let user = await User.findOne({ where: { email: email } });
+  
+        if (user) {
+            return res.status(400).json({ message: 'Email sudah terdaftar' });
+        }
+  
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
+  
+        user = await User.create({
+            nama,
+            email,
+            password: hashedPassword,
+            nomer_telepon,
+            dob,
+            gender,
+            role,
+            saldo: saldoToAdd // Menambahkan saldo awal saat pendaftaran
+        });
+  
+        // Menghilangkan password dari respons
+        const userData = {
+            id_user: user.id_user,
+            nama: user.nama,
+            email: user.email,
+            nomer_telepon: user.nomer_telepon,
+            dob: user.dob,
+            gender: user.gender,
+            role: user.role,
+            saldo: user.saldo
+        };
+  
+        // Menyertakan token dalam respons setelah pendaftaran berhasil
+        const payload = {
+            user: userData
+        };
+  
+        jwt.sign(payload, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(500).json({ message: 'Server Error' });
+            }
+            res.json({ token, user: userData });
+        });
+  
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+  });
 //login
 router.post('/login', async (req, res) => {
   const token = req.body.token; // Ambil token dari body request
@@ -100,5 +103,36 @@ router.post('/login', async (req, res) => {
   }
 });
 
+//tambah saldo
+router.post('/add-saldo', async (req, res) => {
+    const { token, saldoToAdd } = req.body;
 
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            const userId = decoded.user.id_user;
+
+            // Cari pengguna berdasarkan id_user dari token
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Tambahkan saldo ke saldo pengguna yang ada
+            user.saldo += saldoToAdd;
+            await user.save();
+
+            res.json({ message: 'Saldo berhasil ditambahkan', saldo: user.saldo });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
 module.exports = router;

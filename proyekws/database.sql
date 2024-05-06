@@ -9,8 +9,10 @@ CREATE TABLE user (
     nomer_telepon VARCHAR(15),
     dob DATE,
     gender ENUM('Laki-laki', 'Perempuan', 'Lainnya') NOT NULL,
-    role ENUM('admin', 'anggota') NOT NULL
+    role ENUM('admin', 'anggota') NOT NULL,
+    saldo DECIMAL(10,2) DEFAULT 0.00 -- Tambah kolom saldo dengan default 0.00
 );
+
 
 -- tabel buku nya
 CREATE TABLE buku (
