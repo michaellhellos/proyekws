@@ -15,6 +15,15 @@ class User extends Model {
             throw error;
         }
     }
+    static async checkAdmin(id_user){
+        let findUserById = await User.findOne({where:{id_user: id_user}})
+        if(findUserById.role == 'admin'){
+            return true
+        }
+        else{
+            return false
+        }
+    }
 }
 
 User.init({

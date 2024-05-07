@@ -8,9 +8,10 @@ const axios = require('axios')
 
 //Endpoint untuk search buku dari rapid api
 router.get('/admin/explore/list', async(req, res)=>{
-    let token = req.header
+    let token = req.header('x-auth-token')
     try{
-        let dataUser = jwt.verify(token, 'your_jwt_secret');
+        let dataUser = jwt.verify(token, 'your_jwt_secret')
+        console.log(dataUser.data)
         let adminChecker = await User.checkAdmin(dataUser.user.role) 
         if(!adminChecker){
             return res.status(403).json({message: "Access denied!"})
@@ -30,8 +31,7 @@ router.get('/admin/explore/list', async(req, res)=>{
         })
         return res.status(200).json(fetchData.data)
     } catch(err){
-        console.log(err)
-        return err
+        return res.status(400).json("error jing" + err)
     }
 })
 
