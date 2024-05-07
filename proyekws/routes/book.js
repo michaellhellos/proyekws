@@ -280,9 +280,8 @@ router.put('/admin/buku/update/:id', async (req, res) => {
     try {
         // Verifikasi token
         const decoded = jwt.verify(token, 'your_jwt_secret');
-        
         // Cek role dari token
-        if (decoded.user.role !== 'admin') {
+        if (decoded.role !== 'admin') {
             return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa melakukan pembaruan buku.' });
         }
 
@@ -296,7 +295,7 @@ router.put('/admin/buku/update/:id', async (req, res) => {
         };
 
         // Melakukan pembaruan buku
-        const result = await Buku.updateBuku(token, bukuId, updatedData);
+        // const result = await Buku.updateBuku(token, bukuId, updatedData); ----> Buat functionnya di Model buku -THIO
 
         // Menangani respons dari hasil pembaruan buku
         if (result.success) {
