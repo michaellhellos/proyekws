@@ -32,19 +32,7 @@ router.post('/register', async (req, res) => {
             saldo: saldoToAdd // Menambahkan saldo awal saat pendaftaran
         });
 
-        // Menghilangkan password dari respons
-        const userData = {
-            id_user: user.id_user,
-            nama: user.nama,
-            email: user.email,
-            nomer_telepon: user.nomer_telepon,
-            dob: user.dob,
-            gender: user.gender,
-            role: user.role,
-            saldo: user.saldo
-        };
-
-        res.json({ user: userData });
+        res.json({ message: `Email ${user.email} berhasil terdaftar` });
 
     } catch (error) {
         console.error(error.message);
