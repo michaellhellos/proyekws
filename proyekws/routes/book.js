@@ -156,5 +156,83 @@ router.post('/buku/pinjam', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+//kembalikan buku
+router.post('/kembalikan-buku', async (req, res) => {
+    const { token, id_buku } = req.body;
 
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            const userId = decoded.user.id_user;
+
+            // Cari pengguna berdasarkan id_user dari token
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Cari buku berdasarkan id_buku yang dimasukkan
+            const buku = await Buku.findByPk(id_buku);
+
+            if (!buku) {
+                return res.status(404).json({ message: 'Buku tidak ditemukan' });
+            }
+
+            // Lakukan pengecekan apakah pengguna sebenarnya meminjam buku tersebut sebelumnya atau tidak
+            // Anda bisa menggunakan relasi atau catatan pinjaman buku di basis data untuk melakukan pengecekan ini
+
+            // Tambahkan saldo pengguna setelah mengembalikan buku
+            const biayaSewa = 25; // Biaya sewa buku
+            user.saldo += biayaSewa;
+            await user.save();
+
+            res.json({ message: 'Anda berhasil mengembalikan buku', saldoSekarang: user.saldo });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+//admin bisa hapus buku
+router.delete('/hapus-buku/:id', async (req, res) => {
+    const { token } = req.body;
+    const bukuId = req.params.id;
+
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            // Pastikan pengguna memiliki peran admin
+            if (decoded.user.role !== 'admin') {
+                return res.status(403).json({ message: 'Anda tidak memiliki izin untuk mengakses fitur ini' });
+            }
+
+            // Cari buku berdasarkan ID yang dimasukkan
+            const buku = await Buku.findByPk(bukuId);
+
+            if (!buku) {
+                return res.status(404).json({ message: 'Buku tidak ditemukan' });
+            }
+
+            // Hapus buku
+            await buku.destroy();
+
+            res.json({ message: 'Buku berhasil dihapus' });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
 module.exports = router;
