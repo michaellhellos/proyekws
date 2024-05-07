@@ -4,7 +4,7 @@ const db = require("./config/sequelize");
 const bukuRoutes = require("./routes/book");
 // const reviewBukuRoutes = require("./routes/review_buku");
 const userRoutes = require("./routes/user");
-
+app.use(express.urlencoded({ extended: true }))
 app.use(express.json());
 
 // Gunakan hanya satu app.use() untuk menggabungkan ketiga router
