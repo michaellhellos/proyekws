@@ -35,7 +35,32 @@ router.get('/admin/explore/list', async(req, res)=>{
 })
 
 //Endpoint untuk import buku
-router.post('/admin/explore/add')
+router.post('/admin/explore/add', async(req, res) =>{
+    let token = req.header('x-auth-token')
+    let id = req.body
+    try{
+        let dataUser = jwt.verify(token, 'your_jwt_secret')
+        let adminChecker = await User.checkAdmin(dataUser.id_user)
+        if(!adminChecker){
+            return res.status(403).json({message: "Access denied!"})
+        }
+
+        let findManga = await axios({
+            method: 'get',
+            url: "https://mangaverse-api.p.rapidapi.com/manga",
+            params:{
+                id: id
+            }, //tolong key e garapen ya meeee, aku ga subscription mangaverse soale :v --Thio
+            headers:{
+                'X-RapidAPI-Key': '0a78375602msh1dcf019f6b6df08p1209d1jsneb4ee786ad76',
+                'X-RapidAPI-Host': 'mangaverse-api.p.rapidapi.com'
+            }
+        })
+        
+    } catch(err){
+        return res.status(400).json(err)
+    }
+})
 
 //Endpoint untuk edit buku
 router.post('/admin/buku/edit')
