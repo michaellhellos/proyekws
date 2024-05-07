@@ -37,7 +37,7 @@ router.get('/admin/explore/list', async(req, res)=>{
 //Endpoint untuk import buku
 router.post('/admin/explore/add', async(req, res) =>{
     let token = req.header('x-auth-token')
-    let id = req.body
+    let id = req.body.id
     try{
         let dataUser = jwt.verify(token, 'your_jwt_secret')
         let adminChecker = await User.checkAdmin(dataUser.id_user)
@@ -50,14 +50,27 @@ router.post('/admin/explore/add', async(req, res) =>{
             url: "https://mangaverse-api.p.rapidapi.com/manga",
             params:{
                 id: id
-            }, //tolong key e garapen ya meeee, aku ga subscription mangaverse soale :v --Thio
+            },
             headers:{
                 'X-RapidAPI-Key': '0a78375602msh1dcf019f6b6df08p1209d1jsneb4ee786ad76',
                 'X-RapidAPI-Host': 'mangaverse-api.p.rapidapi.com'
             }
         })
-        
+        let checkManga = await Buku.findOne({where:{judul: findManga.data.data.title}})
+        if(checkManga != null){
+            return res.status(400).json({message: `Buku dengan judul ${findManga.data.data.title} sudah ada dalam database!`})
+        }
+        if(findManga.data.data.authors[0] == ""){
+            findManga.data.data.authors[0] = Buku.generateRandomName()
+        }
+        let newBook = await Buku.create({
+            judul: findManga.data.data.title,
+            penulis: findManga.data.data.authors[0],
+            tahun_terbit: Buku.getYearFromUnixTime(findManga.data.data.create_at)
+        })
+        return res.status(201).json({message: `Buku dengan judul ${newBook.judul} berhasil ditambahkan kedalam database!`})
     } catch(err){
+        console.log(err)
         return res.status(400).json(err)
     }
 })

@@ -18,6 +18,10 @@ class Buku extends Model{
     
         return randomName.charAt(0).toUpperCase() + randomName.slice(1); // Awal nama diubah menjadi huruf besar
     }
+    static getYearFromUnixTime(timestamp) {
+        const date = new Date(timestamp);
+        return date.getFullYear();
+    }
 }
 
 Buku.init({
