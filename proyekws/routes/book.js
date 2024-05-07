@@ -7,7 +7,7 @@ const router = express.Router();
 const axios = require('axios')
 
 //Endpoint untuk search buku dari rapid api
-router.get('/buku/explore/list', async(req, res)=>{
+router.get('/admin/explore/list', async(req, res)=>{
     let token = req.header
     try{
         let dataUser = jwt.verify(token, 'your_jwt_secret');
@@ -36,10 +36,13 @@ router.get('/buku/explore/list', async(req, res)=>{
 })
 
 //Endpoint untuk import buku
-router.post('/buku/explore/add')
+router.post('/admin/explore/add')
+
+//Endpoint untuk edit buku
+router.post('/admin/buku/edit')
 
 // Endpoint untuk menambahkan buku
-router.post('/', async (req, res) => {
+router.post('/admin/buku/add', async (req, res) => {
     const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
     
     try {
@@ -68,7 +71,7 @@ router.post('/', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
-router.get('/liatbuku', async (req, res) => {
+router.get('/buku/list', async (req, res) => {
     try {
         // Mengambil semua buku dari database menggunakan model Buku
         const books = await Buku.findAll();
@@ -81,7 +84,7 @@ router.get('/liatbuku', async (req, res) => {
     }
 });
 
-router.post('/review', async (req, res) => {
+router.post('/buku/review', async (req, res) => {
     const { id_buku, id_anggota, rating, komentar, token } = req.body;
 
     try {
@@ -107,7 +110,7 @@ router.post('/review', async (req, res) => {
 });
 
 //pinjam buku
-router.post('/pinjam-buku', async (req, res) => {
+router.post('/buku/pinjam', async (req, res) => {
     const { token, id_buku } = req.body;
 
     try {

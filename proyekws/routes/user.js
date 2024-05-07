@@ -104,7 +104,7 @@ router.post('/login', async (req, res) => {
 });
 
 //tambah saldo
-router.post('/add-saldo', async (req, res) => {
+router.post('/user/add-saldo', async (req, res) => {
     const { token, saldoToAdd } = req.body;
 
     try {
