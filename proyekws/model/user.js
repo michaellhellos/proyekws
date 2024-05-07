@@ -17,6 +17,7 @@ class User extends Model {
     }
     static async checkAdmin(id_user){
         let findUserById = await User.findOne({where:{id_user: id_user}})
+        console.log(findUserById);
         if(findUserById.role == 'admin'){
             return true
         }

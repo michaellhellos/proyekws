@@ -272,4 +272,45 @@ router.delete('/hapus-buku/:id', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+//update buku 
+router.put('/admin/buku/update/:id', async (req, res) => {
+    const bukuId = req.params.id;
+    const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
+    
+    try {
+        // Verifikasi token
+        const decoded = jwt.verify(token, 'your_jwt_secret');
+        
+        // Cek role dari token
+        if (decoded.user.role !== 'admin') {
+            return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa melakukan pembaruan buku.' });
+        }
+
+        // Data yang akan diperbarui
+        const updatedData = {
+            judul,
+            penulis,
+            penerbit,
+            tahun_terbit,
+            isbn
+        };
+
+        // Melakukan pembaruan buku
+        const result = await Buku.updateBuku(token, bukuId, updatedData);
+
+        // Menangani respons dari hasil pembaruan buku
+        if (result.success) {
+            res.status(200).json({ message: result.message });
+        } else {
+            res.status(400).json({ message: result.message });
+        }
+    } catch (error) {
+        console.error(error.message);
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Token tidak valid' });
+        }
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;
