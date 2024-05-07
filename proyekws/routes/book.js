@@ -106,4 +106,52 @@ router.post('/review', async (req, res) => {
     }
 });
 
+//pinjam buku
+router.post('/pinjam-buku', async (req, res) => {
+    const { token, id_buku } = req.body;
+
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            const userId = decoded.user.id_user;
+
+            // Cari pengguna berdasarkan id_user dari token
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Pastikan pengguna memiliki saldo yang cukup
+            const biayaSewa = 50; // Biaya sewa buku
+            if (user.saldo < biayaSewa) {
+                return res.status(400).json({ message: 'Saldo tidak mencukupi untuk meminjam buku' });
+            }
+
+            // Cari buku berdasarkan id_buku yang dimasukkan
+            const buku = await Buku.findByPk(id_buku);
+
+            if (!buku) {
+                return res.status(404).json({ message: 'Buku tidak ditemukan' });
+            }
+
+            // Lakukan pengecekan apakah buku sudah dipinjam sebelumnya atau tidak
+
+            // Kurangi saldo pengguna sesuai biaya sewa buku
+            user.saldo -= biayaSewa;
+            await user.save();
+
+            res.json({ message: 'Anda berhasil meminjam buku', saldoSekarang: user.saldo });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;
