@@ -41,6 +41,10 @@ ALTER TABLE user
 ADD created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
 ADD updated_at DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP;
 
+
+ALTER TABLE user
+ADD COLUMN api_hit INT NOT NULL DEFAULT 0;
+
 INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, isbn) VALUES
 ('Harry Potter and the Philosopher''s Stone', 'J.K. Rowling', 'Bloomsbury Publishing', 1997, '9780747532743'),
 ('To Kill a Mockingbird', 'Harper Lee', 'J.B. Lippincott & Co.', 1960, '9780061120084'),

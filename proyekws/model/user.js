@@ -24,7 +24,26 @@ class User extends Model {
         else{
             return false
         }
+    }static async beliApiHit(id_user, jumlahApiHit) {
+        try {
+            const user = await this.findByPk(id_user);
+            if (!user) {
+                throw new Error('User not found');
+            }
+            const hargaApiHit = 10; // Harga satu api_hit dalam satuan saldo
+            const totalHarga = jumlahApiHit * hargaApiHit;
+            if (user.saldo < totalHarga) {
+                throw new Error('Saldo tidak mencukupi');
+            }
+            user.saldo -= totalHarga;
+            user.api_hit += jumlahApiHit;
+            await user.save();
+            return user;
+        } catch (error) {
+            throw error;
+        }
     }
+    
 }
 
 User.init({
@@ -66,6 +85,11 @@ User.init({
     saldo: {
         type: DataTypes.DECIMAL(10, 2),
         defaultValue: 0.00 // Kolom saldo dengan default 0.00
+    },
+    api_hit: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+        defaultValue: 0 // Kolom API hit dengan default 0
     },
     created_at: {
         type: DataTypes.DATE,

@@ -114,4 +114,35 @@ router.post('/user/add-saldo', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+router.post('/user/beli-api-hit', async (req, res) => {
+    const { token, jumlahApiHit } = req.body;
+
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            const userId = decoded.user.id_user;
+
+            // Cari pengguna berdasarkan id_user dari token
+            const user = await User.findByPk(userId);
+
+            if (!user) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Memanggil metode beliApiHit untuk memproses pembelian api_hit
+            await User.beliApiHit(userId, jumlahApiHit);
+
+            res.json({ message: 'Pembelian api_hit berhasil', saldo: user.saldo, api_hit: user.api_hit });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;

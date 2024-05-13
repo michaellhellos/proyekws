@@ -167,6 +167,14 @@ router.post('/buku/pinjam', async (req, res) => {
                 return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
             }
 
+            // Cek apakah pengguna memiliki api_hit
+            if (user.api_hit > 0) {
+                // Kurangi api_hit pengguna
+                user.api_hit--;
+                await user.save();
+                return res.json({ message: 'Anda berhasil meminjam buku dengan menggunakan api_hit', api_hitSekarang: user.api_hit });
+            }
+
             // Pastikan pengguna memiliki saldo yang cukup
             const biayaSewa = 50; // Biaya sewa buku
             if (user.saldo < biayaSewa) {
