@@ -94,7 +94,7 @@ router.post('/user/add-saldo', async (req, res) => {
                 return res.status(401).json({ message: 'Token tidak valid' });
             }
 
-            const userId = decoded.user.id_user;
+            const userId = decoded.id_user; // Mengakses langsung id_user dari decoded
 
             // Cari pengguna berdasarkan id_user dari token
             const user = await User.findByPk(userId);
@@ -125,7 +125,7 @@ router.post('/user/beli-api-hit', async (req, res) => {
                 return res.status(401).json({ message: 'Token tidak valid' });
             }
 
-            const userId = decoded.user.id_user;
+            const userId = decoded.id_user; // Mengakses langsung id_user dari decoded
 
             // Cari pengguna berdasarkan id_user dari token
             const user = await User.findByPk(userId);
@@ -137,6 +137,9 @@ router.post('/user/beli-api-hit', async (req, res) => {
             // Memanggil metode beliApiHit untuk memproses pembelian api_hit
             await User.beliApiHit(userId, jumlahApiHit);
 
+            // Refresh data user setelah pembelian api_hit
+            await user.reload();
+
             res.json({ message: 'Pembelian api_hit berhasil', saldo: user.saldo, api_hit: user.api_hit });
         });
     } catch (error) {
@@ -144,5 +147,4 @@ router.post('/user/beli-api-hit', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
-
 module.exports = router;

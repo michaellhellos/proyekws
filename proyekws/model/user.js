@@ -12,19 +12,25 @@ class User extends Model {
             await user.save();
             return user;
         } catch (error) {
+            console.error('Error adding saldo:', error);
             throw error;
         }
     }
-    static async checkAdmin(id_user){
-        let findUserById = await User.findOne({where:{id_user: id_user}})
-        console.log(findUserById);
-        if(findUserById.role == 'admin'){
-            return true
+
+    static async checkAdmin(id_user) {
+        try {
+            const user = await User.findOne({ where: { id_user } });
+            if (!user) {
+                throw new Error('User not found');
+            }
+            return user.role === 'admin';
+        } catch (error) {
+            console.error('Error checking admin:', error);
+            throw error;
         }
-        else{
-            return false
-        }
-    }static async beliApiHit(id_user, jumlahApiHit) {
+    }
+
+    static async beliApiHit(id_user, jumlahApiHit) {
         try {
             const user = await this.findByPk(id_user);
             if (!user) {
@@ -40,10 +46,10 @@ class User extends Model {
             await user.save();
             return user;
         } catch (error) {
+            console.error('Error buying API hits:', error);
             throw error;
         }
     }
-    
 }
 
 User.init({
@@ -99,13 +105,13 @@ User.init({
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
     }
 }, {
     sequelize: db,
     modelName: 'User',
     tableName: 'user',
-    timestamps: false,
+    timestamps: false, // Jika Anda tidak ingin menggunakan fitur timestamps default Sequelize
     underscored: true,
     freezeTableName: true
 });
