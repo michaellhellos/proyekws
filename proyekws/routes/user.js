@@ -1,18 +1,56 @@
 const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const User = require('../model/user'); // Sesuaikan path ke model User Anda
+const multer = require('multer');
+const path = require('path');
+const fs = require('fs');
+const User = require('../model/user'); // Adjust the path to your User model
 
-router.get('/', (req, res) => {
-    res.render('register'); // Anda dapat mengganti 'register' dengan nama view register Anda
+// Ensure the uploads directory exists
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Set up storage engine
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, uploadDir); // Use the dynamically created directory
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + '-' + Date.now() + path.extname(file.originalname)); // File name
+    }
 });
 
-router.post('/register', async (req, res) => {
+// Initialize multer
+const upload = multer({
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        // Check file type
+        const filetypes = /jpeg|jpg|png/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
+
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb('Error: Images Only!');
+        }
+    }
+});
+
+router.post('/register', upload.single('profile_image'), async (req, res) => {
     const { nama, email, password, nomer_telepon, dob, gender, role, saldoToAdd } = req.body;
+    const profileImage = req.file ? req.file.filename : null;
 
     try {
+        // Log the input data for debugging
+        console.log('Request Body:', req.body);
+
         let user = await User.findOne({ where: { email: email } });
+
+        // Log the query result for debugging
+        console.log('User Query Result:', user);
 
         if (user) {
             return res.status(400).json({ message: 'Email sudah terdaftar' });
@@ -29,15 +67,20 @@ router.post('/register', async (req, res) => {
             dob,
             gender,
             role,
-            saldo: saldoToAdd // Menambahkan saldo awal saat pendaftaran
+            saldo: saldoToAdd,
+            profile_image: profileImage // Save the file name in the database
         });
 
         res.json({ message: `Email ${user.email} berhasil terdaftar` });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server Error' });
+        // Log the error for debugging
+        console.error('Server Error:', error);
+        res.status(500).json({ message: 'Server Error', error: error.message });
     }
 });
+
+module.exports = router;
 
 //login
 router.post('/login', async (req, res) => {
@@ -83,7 +126,7 @@ router.post('/login', async (req, res) => {
 
 
 //tambah saldo
-router.post('/user/add-saldo', async (req, res) => {
+router.post('/user/saldo', async (req, res) => {
     const { token, saldoToAdd } = req.body;
 
     try {
@@ -114,7 +157,7 @@ router.post('/user/add-saldo', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
-router.post('/user/beli-api-hit', async (req, res) => {
+router.post('/user/member', async (req, res) => {
     const { token, jumlahApiHit } = req.body;
 
     try {

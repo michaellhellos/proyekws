@@ -23,7 +23,6 @@
 						"key": "Authorization",
 						"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZWd1bmF3YW4zQGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxMzU0ODgzOCwiZXhwIjoxNzEzNTUyNDM4fQ.rzCbQSPeqNc_MCYxy86UqIyDuetPpDSQI38QRivSmTQ",
 						"type": "text",
-						"uuid": "eb3662e6-26da-4e8a-82be-252ac569cc4b",
 						"disabled": true
 					}
 				],
@@ -51,13 +50,13 @@
 			"response": []
 		},
 		{
-			"name": "admin+book",
+			"name": "admin_tambah_buku",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"judul\": \"Membuat Aplikasi Web dengan Node.js\",\r\n    \"penulis\": \"Michael Gunawan\",\r\n    \"penerbit\": \"Gunawan Publishing\",\r\n    \"tahun_terbit\": 2022,\r\n    \"isbn\": \"978-1234567890\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjQsIm5hbWEiOiJtaWNoYWVsbGwiLCJlbWFpbCI6Im1lbWd1bmF3YW41QGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxNDMxMjcwMCwiZXhwIjoxNzE0MzE2MzAwfQ.Sc2SkWGJXZgFCfFnlWtbm3qa84lN8WQsml48_Ffs0bw\"\r\n}\r\n",
+					"raw": "{\r\n    \"judul\": \"Membuat Aplikasi Web dengan Node.js\",\r\n    \"penulis\": \"Michael Gunawan\",\r\n    \"penerbit\": \"Gunawan Publishing\",\r\n    \"tahun_terbit\": 2022,\r\n    \"isbn\": \"978-1234567890\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjEsIm5hbWEiOiJKb2huIERvZSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6InVzZXIifSwiaWF0IjoxNzE0OTU5NDU1LCJleHAiOjE3MTQ5NjMwNTV9.udEWJgoCphrFFjgCM_PsihAKktktVePFPX3eok21m04\"\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -65,14 +64,16 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/",
+					"raw": "localhost:3000/api/admin/buku/add",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"api",
-						""
+						"admin",
+						"buku",
+						"add"
 					]
 				}
 			},
@@ -84,27 +85,28 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "localhost:3000/api/liatbuku",
+					"raw": "localhost:3000/api/buku/list",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"api",
-						"liatbuku"
+						"buku",
+						"list"
 					]
 				}
 			},
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "tambah_saldo",
 			"request": {
 				"method": "POST",
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjEsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5ra0BnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6InVzZXIiLCJzYWxkbyI6MTAwfSwiaWF0IjoxNzE0OTc0MTAxLCJleHAiOjE3MTQ5Nzc3MDF9.P9X8SYhX8ymh-5VS59teXFwkvePVxXyZaw78Cp4tSCU\",\r\n    \"saldoToAdd\": 100.00\r\n}\r\n",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"saldoToAdd\": 1000.00\r\n}\r\n",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -112,13 +114,14 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/add-saldo",
+					"raw": "localhost:3000/api/user/add-saldo",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"api",
+						"user",
 						"add-saldo"
 					]
 				}
@@ -134,7 +137,7 @@
 			"response": []
 		},
 		{
-			"name": "New Request",
+			"name": "buku_pinjam",
 			"request": {
 				"method": "POST",
 				"header": [],
@@ -148,14 +151,144 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:3000/api/pinjam-buku",
+					"raw": "localhost:3000/api/buku/pinjam",
 					"host": [
 						"localhost"
 					],
 					"port": "3000",
 					"path": [
 						"api",
-						"pinjam-buku"
+						"buku",
+						"pinjam"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "kembalikan_buku",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"id_buku\": 1\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/kembalikan-buku",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"kembalikan-buku"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "hapus_buku",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjMsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWltaUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6ImFkbWluIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1NDA2MSwiZXhwIjoxNzE1MDU3NjYxfQ.WntRrdb8Cs2NddxVYN9sKwshbbT46mi7sdPyx7cXVIg\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/hapus-buku/:id",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"hapus-buku",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_buku",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"judul\": \"simanis dari pinggir kali\",\r\n    \"penulis\": \"meme\",\r\n    \"penerbit\": \"michaell \",\r\n    \"tahun_terbit\": 2003,\r\n    \"isbn\": \"9780061120090\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjozLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1pbWlAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTA5MzYyNCwiZXhwIjoxNzE1MDk3MjI0fQ.DuZKhc8_9lG7S9k-VjPq1ONjS2bVl8-dAXB_in4j2hc\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/admin/buku/update/:id",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"admin",
+						"buku",
+						"update",
+						":id"
+					],
+					"variable": [
+						{
+							"key": "id",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "member",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n   \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxMCwibmFtYSI6Im1pY2hhZWxsIiwiZW1haWwiOiJvYmVydEBnbWFpbC5jb20iLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoiIiwicm9sZSI6ImFuZ2dvdGEiLCJpYXQiOjE3MTU3MzIyNTQsImV4cCI6MTcxNTczNTg1NH0.8ed7e1Lu1-tRVANT-cTGr0npLUmYUmkaPfVQSfFutA8\",\r\n    \"apihit\": 15\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "localhost:3000/api/user/beli-api-hit",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"user",
+						"beli-api-hit"
 					]
 				}
 			},

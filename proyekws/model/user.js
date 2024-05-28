@@ -51,7 +51,6 @@ class User extends Model {
         }
     }
 }
-
 User.init({
     id_user: {
         type: DataTypes.INTEGER,
@@ -70,7 +69,7 @@ User.init({
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false // Password harus ada dan tidak boleh null
+        allowNull: false
     },
     nomer_telepon: {
         type: DataTypes.STRING,
@@ -90,28 +89,33 @@ User.init({
     },
     saldo: {
         type: DataTypes.DECIMAL(10, 2),
-        defaultValue: 0.00 // Kolom saldo dengan default 0.00
+        defaultValue: 0.00
     },
     api_hit: {
         type: DataTypes.INTEGER,
         allowNull: false,
-        defaultValue: 0 // Kolom API hit dengan default 0
+        defaultValue: 0
+    },
+    profile_image: {
+        type: DataTypes.STRING,
+        allowNull: true
     },
     created_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.NOW
     },
     updated_at: {
         type: DataTypes.DATE,
         allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP')
+        defaultValue: Sequelize.NOW,
+        onUpdate: Sequelize.NOW
     }
 }, {
     sequelize: db,
     modelName: 'User',
     tableName: 'user',
-    timestamps: false, // Jika Anda tidak ingin menggunakan fitur timestamps default Sequelize
+    timestamps: false,
     underscored: true,
     freezeTableName: true
 });
