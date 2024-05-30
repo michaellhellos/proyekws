@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
+const jwt = require('jsonwebtoken');
 const User = require('../model/user'); // Adjust the path to your User model
 
 // Ensure the uploads directory exists
@@ -80,7 +81,6 @@ router.post('/register', upload.single('profile_image'), async (req, res) => {
     }
 });
 
-module.exports = router;
 
 //login
 router.post('/login', async (req, res) => {
@@ -190,4 +190,60 @@ router.post('/user/member', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+// melihat semua user yang terdaftar
+router.get('/users', async (req, res) => {
+    try {
+        const users = await User.findAll();
+        res.status(200).json(users);
+    } catch (error) {
+        console.error('Error fetching users:', error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+});
+
+//bisa hapus user nya 
+router.delete('/user/:id', async (req, res) => {
+    const { token } = req.body;
+    const userIdToDelete = req.params.id;
+
+    try {
+        // Verifikasi token
+        jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
+            if (err) {
+                console.error(err.message);
+                return res.status(401).json({ message: 'Token tidak valid' });
+            }
+
+            const userId = decoded.id_user; // Mengakses langsung id_user dari decoded
+
+            // Cari pengguna berdasarkan id_user dari token
+            const adminUser = await User.findByPk(userId);
+
+            if (!adminUser) {
+                return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
+            }
+
+            // Pastikan pengguna yang mencoba menghapus adalah admin
+            if (adminUser.role !== 'admin') {
+                return res.status(403).json({ message: 'Akses ditolak, hanya admin yang dapat menghapus pengguna' });
+            }
+
+            // Cari pengguna yang ingin dihapus berdasarkan ID
+            const userToDelete = await User.findByPk(userIdToDelete);
+
+            if (!userToDelete) {
+                return res.status(404).json({ message: 'Pengguna yang ingin dihapus tidak ditemukan' });
+            }
+
+            // Hapus pengguna
+            await userToDelete.destroy();
+
+            res.json({ message: `Pengguna dengan ID ${userIdToDelete} berhasil dihapus` });
+        });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 module.exports = router;
