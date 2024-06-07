@@ -5,7 +5,7 @@ const Buku = require('../model/buku'); // Sesuaikan path ke model Buku Anda
 const ReviewBuku = require('../model/review_buku');
 const router = express.Router();
 const axios = require('axios')
-
+const upload = require('../config/multer.js');
 //Endpoint untuk search buku dari rapid api
 router.get('/admin/explore/list', async(req, res)=>{
     let token = req.header('x-auth-token')
@@ -78,36 +78,7 @@ router.post('/admin/explore/add', async(req, res) =>{
 //Endpoint untuk edit buku
 router.post('/admin/buku/edit')
 
-// Endpoint untuk menambahkan buku
-router.post('/admin/buku/add', async (req, res) => {
-    const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
-    
-    try {
-        // Verifikasi token
-        const decoded = jwt.verify(token, 'your_jwt_secret');
-        
-        // Cek role dari token
-        if (decoded.user.role !== 'admin') {
-            return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa menambahkan buku.' });
-        }
 
-        const buku = await Buku.create({
-            judul,
-            penulis,
-            penerbit,
-            tahun_terbit,
-            isbn
-        });
-
-        res.status(201).json({ message: 'Buku berhasil ditambahkan', buku });
-    } catch (error) {
-        console.error(error.message);
-        if (error.name === 'JsonWebTokenError') {
-            return res.status(401).json({ message: 'Token tidak valid' });
-        }
-        res.status(500).json({ message: 'Server Error' });
-    }
-});
 router.get('/buku/list', async (req, res) => {
     try {
         // Mengambil semua buku dari database menggunakan model Buku
@@ -244,7 +215,7 @@ router.post('/kembalikan-buku', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
-
+//ini punya admin bert ini bisa kamu utek utek wes an 
 //admin bisa hapus buku
 router.delete('/hapus-buku/:id', async (req, res) => {
     const { token } = req.body;
@@ -258,8 +229,13 @@ router.delete('/hapus-buku/:id', async (req, res) => {
                 return res.status(401).json({ message: 'Token tidak valid' });
             }
 
+            // Pastikan payload token memiliki struktur yang diharapkan
+            if (!decoded || !decoded.role) {
+                return res.status(403).json({ message: 'Token tidak valid atau tidak memiliki akses.' });
+            }
+
             // Pastikan pengguna memiliki peran admin
-            if (decoded.user.role !== 'admin') {
+            if (decoded.role !== 'admin') {
                 return res.status(403).json({ message: 'Anda tidak memiliki izin untuk mengakses fitur ini' });
             }
 
@@ -280,17 +256,25 @@ router.delete('/hapus-buku/:id', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+
 //update buku 
-router.put('/admin/buku/update/:id', async (req, res) => {
+router.put('/admin/buku/update/:id', upload.single('gambar'), async (req, res) => {
     const bukuId = req.params.id;
     const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
-    
+    const gambar = req.file ? req.file.filename : null;
+
     try {
         // Verifikasi token
         const decoded = jwt.verify(token, 'your_jwt_secret');
         // Cek role dari token
-        if (decoded.role !== 'admin') {
+        if (!decoded || decoded.role !== 'admin') {
             return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa melakukan pembaruan buku.' });
+        }
+
+        // Ambil data buku berdasarkan ID
+        let buku = await Buku.findByPk(bukuId);
+        if (!buku) {
+            return res.status(404).json({ message: 'Buku tidak ditemukan' });
         }
 
         // Data yang akan diperbarui
@@ -302,15 +286,16 @@ router.put('/admin/buku/update/:id', async (req, res) => {
             isbn
         };
 
+        // Jika ada gambar baru, tambahkan ke data yang akan diperbarui
+        if (gambar) {
+            updatedData.gambar = gambar;
+        }
+
         // Melakukan pembaruan buku
-        // const result = await Buku.updateBuku(token, bukuId, updatedData); ----> Buat functionnya di Model buku -THIO
+        await buku.update(updatedData);
 
         // Menangani respons dari hasil pembaruan buku
-        if (result.success) {
-            res.status(200).json({ message: result.message });
-        } else {
-            res.status(400).json({ message: result.message });
-        }
+        res.status(200).json({ message: 'Buku berhasil diperbarui' });
     } catch (error) {
         console.error(error.message);
         if (error.name === 'JsonWebTokenError') {
@@ -319,5 +304,42 @@ router.put('/admin/buku/update/:id', async (req, res) => {
         res.status(500).json({ message: 'Server Error' });
     }
 });
+// Endpoint untuk menambahkan buku
+router.post('/admin/buku/add', upload.single('gambar'), async (req, res) => {
+    const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
+    const gambar = req.file ? req.file.filename : null;
+
+    try {
+        // Verifikasi token
+        const decoded = jwt.verify(token, 'your_jwt_secret');
+        // Cek role dari token
+        if (!decoded || decoded.role !== 'admin') {
+            return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa menambahkan buku.' });
+        }
+
+        // Data yang akan ditambahkan
+        const newBook = {
+            judul,
+            penulis,
+            penerbit,
+            tahun_terbit,
+            isbn,
+            gambar
+        };
+
+        // Melakukan penambahan buku
+        const buku = await Buku.create(newBook);
+
+        // Menangani respons dari hasil penambahan buku
+        res.status(201).json({ message: 'Buku berhasil ditambahkan', buku });
+    } catch (error) {
+        console.error(error.message);
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Token tidak valid' });
+        }
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
 
 module.exports = router;

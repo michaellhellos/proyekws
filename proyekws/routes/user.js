@@ -53,22 +53,18 @@ router.post("/register", upload.single("profile_image"), async (req, res) => {
     nomer_telepon,
     dob,
     gender,
-    role,
-    saldoToAdd,
   } = req.body;
-  const profileImage = req.file ? req.file.filename : null;
 
-  if (
-    !nama ||
-    !email ||
-    !password ||
-    !nomer_telepon ||
-    !dob ||
-    !gender ||
-    !role
-  ) {
+  // Common validation for all registrations
+  if (!nama || !email || !password || !nomer_telepon || !dob || !gender) {
     return res.status(400).json({ message: "Field tidak boleh kosong!" });
   }
+
+  const profileImage = req.file ? req.file.filename : null;
+
+  // Determine role based on profile image presence
+  const role = profileImage ? 'anggota' : 'admin';
+
   try {
     // Log the input data for debugging
     console.log("Request Body:", req.body);
@@ -93,18 +89,21 @@ router.post("/register", upload.single("profile_image"), async (req, res) => {
       dob,
       gender,
       role,
-      saldo: saldoToAdd,
-      profile_image: profileImage, // Save the file name in the database
+      saldo: 1000, // Set default balance to 1000
+      profile_image: profileImage, // Save the file name in the database if it exists
     });
 
-    res.status(201).json({ message: `Email ${user.email} berhasil terdaftar` });
+    if (role === 'anggota') {
+      res.status(201).json({ message: `Selamat, email ${user.email} terdaftar sebagai anggota!` });
+    } else {
+      res.status(201).json({ message: `Selamat, email ${user.email} terdaftar dengan role admin!` });
+    }
   } catch (error) {
     // Log the error for debugging
     console.error("Server Error:", error);
     res.status(500).json({ message: "Server Error", error: error.message });
   }
 });
-
 //login
 router.post("/login", async (req, res) => {
   const { email, password } = req.body;
