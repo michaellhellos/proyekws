@@ -154,7 +154,7 @@ router.post("/login", async (req, res) => {
 router.post("/user/saldo", async (req, res) => {
   const { token, saldoToAdd } = req.body;
 
-  if (!token || !saldoToAdd) {
+  if (!token || saldoToAdd == null) { // Check for null as well as undefined
     return res.status(400).json({ message: "Field tidak boleh kosong!" });
   }
 
@@ -168,27 +168,31 @@ router.post("/user/saldo", async (req, res) => {
 
       const userId = decoded.id_user; // Mengakses langsung id_user dari decoded
 
-      // Cari pengguna berdasarkan id_user dari token
-      const user = await User.findByPk(userId);
-
-      if (!user) {
-        return res.status(404).json({ message: "Pengguna tidak ditemukan!" });
+      // Convert saldoToAdd to a number
+      const saldoToAddNumber = parseFloat(saldoToAdd);
+      if (isNaN(saldoToAddNumber)) {
+        return res.status(400).json({ message: "Saldo to add harus berupa angka!" });
       }
 
-      // Tambahkan saldo ke saldo pengguna yang ada
-      user.saldo += saldoToAdd;
-      await user.save();
+      try {
+        // Use the addSaldo method from the User model
+        const user = await User.addSaldo(userId, saldoToAddNumber);
 
-      res.status(200).json({
-        message: "Saldo user berhasil ditambahkan",
-        saldo: user.saldo,
-      });
+        res.status(200).json({
+          message: "Saldo user berhasil ditambahkan",
+          saldo: parseFloat(user.saldo).toFixed(2), // Format saldo to two decimal places
+        });
+      } catch (error) {
+        console.error('Error adding saldo:', error.message);
+        res.status(500).json({ message: "Error adding saldo" });
+      }
     });
   } catch (error) {
     console.error(error.message);
     res.status(500).json({ message: "Server Error" });
   }
 });
+
 router.post("/user/member", async (req, res) => {
   const { token, jumlahApiHit } = req.body;
 

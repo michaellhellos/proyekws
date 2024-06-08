@@ -8,7 +8,7 @@ class User extends Model {
             if (!user) {
                 throw new Error('User not found');
             }
-            user.saldo += saldoToAdd;
+            user.saldo = parseFloat(user.saldo) + saldoToAdd; // Ensure correct arithmetic operation
             await user.save();
             return user;
         } catch (error) {
@@ -16,6 +16,7 @@ class User extends Model {
             throw error;
         }
     }
+
 
     static async checkAdmin(id_user) {
         try {
@@ -88,7 +89,7 @@ User.init({
         allowNull: false
     },
     saldo: {
-        type: DataTypes.DECIMAL(10, 2),
+        type: DataTypes.DECIMAL(20, 2), // Increased precision and scale
         defaultValue: 0.00
     },
     api_hit: {
@@ -119,5 +120,4 @@ User.init({
     underscored: true,
     freezeTableName: true
 });
-
 module.exports = User;

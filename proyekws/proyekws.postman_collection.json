@@ -169,6 +169,25 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "liat_yang sudah_daftar",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -196,56 +215,13 @@
 					"response": []
 				},
 				{
-					"name": "register",
-					"request": {
-						"method": "POST",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "login",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZWd1bmF3YW4zQGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxMzU0ODgzOCwiZXhwIjoxNzEzNTUyNDM4fQ.rzCbQSPeqNc_MCYxy86UqIyDuetPpDSQI38QRivSmTQ",
-								"type": "text",
-								"disabled": true
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZWd1bmF3YW4zQGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxMzU0ODgzOCwiZXhwIjoxNzEzNTUyNDM4fQ.rzCbQSPeqNc_MCYxy86UqIyDuetPpDSQI38QRivSmTQ\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/Login",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Login"
-							]
-						}
-					},
-					"response": []
-				},
-				{
 					"name": "tambah_saldo",
 					"request": {
 						"method": "POST",
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"saldoToAdd\": 1000.00\r\n}\r\n",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoyLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1lbWU0QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSIsImlhdCI6MTcxNzg1NzQ0MiwiZXhwIjoxNzE3ODYxMDQyfQ.NaWboHKrBKY0pqvL4FWjje0A-QjVTNwJeRTSql7UoWk\",\r\n    \"saldoToAdd\": 1000.00\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -262,6 +238,35 @@
 								"api",
 								"user",
 								"add-saldo"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "member",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxMCwibmFtYSI6Im1pY2hhZWxsIiwiZW1haWwiOiJvYmVydEBnbWFpbC5jb20iLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoiIiwicm9sZSI6ImFuZ2dvdGEiLCJpYXQiOjE3MTU3MzIyNTQsImV4cCI6MTcxNTczNTg1NH0.8ed7e1Lu1-tRVANT-cTGr0npLUmYUmkaPfVQSfFutA8\",\r\n    \"apihit\": 15\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/user/beli-api-hit",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"beli-api-hit"
 							]
 						}
 					},
@@ -323,15 +328,35 @@
 						}
 					},
 					"response": []
-				},
+				}
+			]
+		},
+		{
+			"name": "login/register",
+			"item": [
 				{
-					"name": "member",
+					"name": "register",
 					"request": {
 						"method": "POST",
-						"header": [],
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZWd1bmF3YW4zQGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxMzU0ODgzOCwiZXhwIjoxNzEzNTUyNDM4fQ.rzCbQSPeqNc_MCYxy86UqIyDuetPpDSQI38QRivSmTQ",
+								"type": "text",
+								"disabled": true
+							}
+						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n   \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxMCwibmFtYSI6Im1pY2hhZWxsIiwiZW1haWwiOiJvYmVydEBnbWFpbC5jb20iLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoiIiwicm9sZSI6ImFuZ2dvdGEiLCJpYXQiOjE3MTU3MzIyNTQsImV4cCI6MTcxNTczNTg1NH0.8ed7e1Lu1-tRVANT-cTGr0npLUmYUmkaPfVQSfFutA8\",\r\n    \"apihit\": 15\r\n}\r\n",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZWd1bmF3YW4zQGdtYWlsLmNvbSIsIm5vbWVyX3RlbGVwb24iOiIwODEzMzIwNzU3NTgiLCJkb2IiOiIyMDAyLTExLTIwIiwiZ2VuZGVyIjoiTGFraS1sYWtpIiwicm9sZSI6ImFkbWluIn0sImlhdCI6MTcxMzU0ODgzOCwiZXhwIjoxNzEzNTUyNDM4fQ.rzCbQSPeqNc_MCYxy86UqIyDuetPpDSQI38QRivSmTQ\"\r\n}\r\n",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -339,15 +364,14 @@
 							}
 						},
 						"url": {
-							"raw": "localhost:3000/api/user/beli-api-hit",
+							"raw": "localhost:3000/api/Login",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"api",
-								"user",
-								"beli-api-hit"
+								"Login"
 							]
 						}
 					},

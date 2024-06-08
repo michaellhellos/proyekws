@@ -122,53 +122,59 @@ router.post('/buku/pinjam', async (req, res) => {
     const { token, id_buku } = req.body;
 
     try {
-        // Verifikasi token
+        // Verify token
         jwt.verify(token, 'your_jwt_secret', async (err, decoded) => {
             if (err) {
-                console.error(err.message);
+                console.error('Token verification error:', err.message);
                 return res.status(401).json({ message: 'Token tidak valid' });
             }
 
-            const userId = decoded.user.id_user;
+            console.log('Decoded token:', decoded); // Log the decoded token
 
-            // Cari pengguna berdasarkan id_user dari token
+            // Ensure the decoded token contains the expected structure
+            const userId = decoded?.user?.id_user;
+            if (!userId) {
+                return res.status(400).json({ message: 'Token tidak mengandung informasi pengguna yang valid' });
+            }
+
+            // Find user by id_user from token
             const user = await User.findByPk(userId);
 
             if (!user) {
                 return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
             }
 
-            // Cek apakah pengguna memiliki api_hit
+            // Check if user has api_hit
             if (user.api_hit > 0) {
-                // Kurangi api_hit pengguna
+                // Decrease user's api_hit
                 user.api_hit--;
                 await user.save();
                 return res.json({ message: 'Anda berhasil meminjam buku dengan menggunakan api_hit', api_hitSekarang: user.api_hit });
             }
 
-            // Pastikan pengguna memiliki saldo yang cukup
-            const biayaSewa = 50; // Biaya sewa buku
+            // Ensure user has enough saldo
+            const biayaSewa = 50; // Book rental fee
             if (user.saldo < biayaSewa) {
                 return res.status(400).json({ message: 'Saldo tidak mencukupi untuk meminjam buku' });
             }
 
-            // Cari buku berdasarkan id_buku yang dimasukkan
+            // Find book by id_buku
             const buku = await Buku.findByPk(id_buku);
 
             if (!buku) {
                 return res.status(404).json({ message: 'Buku tidak ditemukan' });
             }
 
-            // Lakukan pengecekan apakah buku sudah dipinjam sebelumnya atau tidak
+            // Perform check to see if book is already borrowed (implement as needed)
 
-            // Kurangi saldo pengguna sesuai biaya sewa buku
+            // Deduct user's saldo according to book rental fee
             user.saldo -= biayaSewa;
             await user.save();
 
             res.json({ message: 'Anda berhasil meminjam buku', saldoSekarang: user.saldo });
         });
     } catch (error) {
-        console.error(error.message);
+        console.error('Server error:', error.message);
         res.status(500).json({ message: 'Server Error' });
     }
 });
