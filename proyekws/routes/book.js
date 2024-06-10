@@ -1,7 +1,8 @@
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const User = require('../model/user')
-const Buku = require('../model/buku'); // Sesuaikan path ke model Buku Anda
+const fs = require('fs');
+const Buku = require('../model/buku.js'); // Sesuaikan path ke model Buku Anda
 const ReviewBuku = require('../model/review_buku');
 const router = express.Router();
 const axios = require('axios')
@@ -264,16 +265,19 @@ router.delete('/hapus-buku/:id', async (req, res) => {
 });
 
 //update buku 
-router.put('/admin/buku/update/:id', upload.single('gambar'), async (req, res) => {
+router.put('/admin/buku/update/:id', upload.fields([{ name: 'gambar', maxCount: 1 }, { name: 'fotobuku', maxCount: 1 }]), async (req, res) => {
     const bukuId = req.params.id;
     const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
-    const gambar = req.file ? req.file.filename : null;
+    const gambar = req.files['gambar'] ? req.files['gambar'][0].filename : null;
+    const fotobuku = req.files['fotobuku'] ? req.files['fotobuku'][0].filename : null;
 
     try {
         // Verifikasi token
         const decoded = jwt.verify(token, 'your_jwt_secret');
+        console.log('Decoded token:', decoded); // Tambahkan logging untuk payload token
+
         // Cek role dari token
-        if (!decoded || decoded.role !== 'admin') {
+        if (!decoded || !decoded.user || decoded.user.role !== 'admin') {
             return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa melakukan pembaruan buku.' });
         }
 
@@ -297,6 +301,11 @@ router.put('/admin/buku/update/:id', upload.single('gambar'), async (req, res) =
             updatedData.gambar = gambar;
         }
 
+        // Jika ada fotobuku baru, tambahkan ke data yang akan diperbarui
+        if (fotobuku) {
+            updatedData.fotobuku = fotobuku;
+        }
+
         // Melakukan pembaruan buku
         await buku.update(updatedData);
 
@@ -311,15 +320,32 @@ router.put('/admin/buku/update/:id', upload.single('gambar'), async (req, res) =
     }
 });
 // Endpoint untuk menambahkan buku
-router.post('/admin/buku/add', upload.single('gambar'), async (req, res) => {
+function validateBukuData(req, res, next) {
+    const { judul, penulis, tahun_terbit } = req.body;
+
+    if (!judul || !penulis) {
+        return res.status(400).json({ message: 'Judul dan penulis harus diisi' });
+    }
+
+    if (tahun_terbit && (isNaN(tahun_terbit) || tahun_terbit < 1000 || tahun_terbit > new Date().getFullYear())) {
+        return res.status(400).json({ message: 'Tahun terbit tidak valid' });
+    }
+
+    next();
+}
+
+//ngide
+router.post('/admin/buku/add', upload.fields([{ name: 'gambar', maxCount: 1 }, { name: 'fotobuku', maxCount: 1 }]), async (req, res) => {
     const { judul, penulis, penerbit, tahun_terbit, isbn, token } = req.body;
-    const gambar = req.file ? req.file.filename : null;
+    const gambar = req.files['gambar'] ? req.files['gambar'][0].filename : null;
+    const fotobuku = req.files['fotobuku'] ? req.files['fotobuku'][0].filename : null;
 
     try {
         // Verifikasi token
         const decoded = jwt.verify(token, 'your_jwt_secret');
-        // Cek role dari token
-        if (!decoded || decoded.role !== 'admin') {
+
+        // Pemeriksaan kembali apakah decoded memiliki properti user dan role
+        if (!decoded || !decoded.user || decoded.user.role !== 'admin') {
             return res.status(403).json({ message: 'Akses ditolak. Hanya admin yang bisa menambahkan buku.' });
         }
 
@@ -330,7 +356,8 @@ router.post('/admin/buku/add', upload.single('gambar'), async (req, res) => {
             penerbit,
             tahun_terbit,
             isbn,
-            gambar
+            gambar,
+            fotobuku
         };
 
         // Melakukan penambahan buku
@@ -339,13 +366,23 @@ router.post('/admin/buku/add', upload.single('gambar'), async (req, res) => {
         // Menangani respons dari hasil penambahan buku
         res.status(201).json({ message: 'Buku berhasil ditambahkan', buku });
     } catch (error) {
-        console.error(error.message);
+        console.error('Error saat menambahkan buku:', error);
+
+        // Handle Sequelize validation error
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => ({
+                field: err.path,
+                message: err.message
+            }));
+            console.log('Detail error:', errors); // Log detail error
+            return res.status(400).json({ message: 'Validasi gagal', errors });
+        }
+
         if (error.name === 'JsonWebTokenError') {
             return res.status(401).json({ message: 'Token tidak valid' });
         }
         res.status(500).json({ message: 'Server Error' });
     }
 });
-
 
 module.exports = router;

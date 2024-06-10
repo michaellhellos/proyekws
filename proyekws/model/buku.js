@@ -46,14 +46,23 @@ Buku.init({
     },
     tahun_terbit: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: true,
+        validate: {
+            isInt: true,
+            min: 1000,
+            max: new Date().getFullYear()
+        }
     },
     isbn: {
         type: DataTypes.STRING,
         allowNull: true,
         unique: true
     },
-    gambar: { // Tambahkan kolom gambar
+    gambar: {
+        type: DataTypes.STRING,
+        allowNull: true
+    },
+    fotobuku: {
         type: DataTypes.STRING,
         allowNull: true
     }
@@ -69,10 +78,25 @@ Buku.updateBuku = async (bukuId, updatedData) => {
         if (!buku) {
             return { success: false, message: 'Buku tidak ditemukan' };
         }
+
+        // Melakukan pembaruan buku
         await buku.update(updatedData);
+
+        // Menangani respons dari hasil pembaruan buku
         return { success: true, message: 'Buku berhasil diperbarui' };
     } catch (error) {
-        console.error(error);
+        console.error('Error saat memperbarui buku:', error);
+
+        // Tambahkan penanganan khusus untuk error validasi
+        if (error.name === 'SequelizeValidationError') {
+            const errors = error.errors.map(err => ({
+                field: err.path,
+                message: err.message
+            }));
+            console.error('Errors:', errors);
+            return { success: false, message: 'Validasi gagal saat memperbarui buku', errors };
+        }
+
         return { success: false, message: 'Terjadi kesalahan saat memperbarui buku' };
     }
 };

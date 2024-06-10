@@ -8,43 +8,40 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi").extend(require("@joi/date"));
 const User = require("../model/user"); // Adjust the path to your User model
 
-// Ensure the uploads directory exists
+
+// Buat folder upload jika belum ada
 const uploadDir = path.join(__dirname, "../uploads");
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+    fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Set up storage engine
+// Setup storage engine untuk multer
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir); // Use the dynamically created directory
-  },
-  filename: function (req, file, cb) {
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    ); // File name
-  },
+    destination: function (req, file, cb) {
+        cb(null, uploadDir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.fieldname + "-" + Date.now() + path.extname(file.originalname));
+    }
 });
 
 // Initialize multer
 const upload = multer({
-  storage: storage,
-  fileFilter: function (req, file, cb) {
-    // Check file type
-    const filetypes = /jpeg|jpg|png/;
-    const extname = filetypes.test(
-      path.extname(file.originalname).toLowerCase()
-    );
-    const mimetype = filetypes.test(file.mimetype);
+    storage: storage,
+    fileFilter: function (req, file, cb) {
+        const filetypes = /jpeg|jpg|png|pdf/;
+        const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
+        const mimetype = filetypes.test(file.mimetype);
 
-    if (mimetype && extname) {
-      return cb(null, true);
-    } else {
-      cb("Error: Images Only!");
+        if (mimetype && extname) {
+            return cb(null, true);
+        } else {
+            cb("Error: Images and PDFs Only!");
+        }
     }
-  },
 });
+
+
 
 router.post("/register", upload.single("profile_image"), async (req, res) => {
   const { nama, email, password, nomer_telepon, dob, gender } = req.body;
@@ -131,51 +128,49 @@ router.post("/register", upload.single("profile_image"), async (req, res) => {
   }
 });
 //login
-router.post("/login", async (req, res) => {
+router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Field tidak boleh kosong!" });
+      return res.status(400).json({ message: 'Field tidak boleh kosong!' });
   }
 
   try {
-    // Cari user berdasarkan email
-    const user = await User.findOne({ where: { email: email } });
-    if (!user) {
-      return res.status(404).json({ message: "User tidak ditemukan!" });
-    }
-
-    // Bandingkan password yang dimasukkan dengan yang tersimpan di database
-    const isMatch = await bcrypt.compare(password, user.password);
-
-    if (!isMatch) {
-      return res.status(400).json({ message: "Email atau password salah!" });
-    }
-
-    // Data user yang akan dimasukkan ke dalam token
-    const userData = {
-      id_user: user.id_user,
-      nama: user.nama,
-      email: user.email,
-      dob: user.dob,
-      gender: user.gender,
-      role: user.role,
-    };
-
-    // Buat token JWT
-    jwt.sign(userData, "your_jwt_secret", { expiresIn: "1h" }, (err, token) => {
-      if (err) {
-        console.error(err.message);
-        return res.status(500).json({ message: "Server Error" });
+      // Find user by email
+      const user = await User.findOne({ where: { email: email } });
+      if (!user) {
+          return res.status(404).json({ message: 'User tidak ditemukan!' });
       }
-      res.status(200).json({ token, user: userData });
-    });
+
+      // Compare the provided password with the stored hash
+      const isMatch = await bcrypt.compare(password, user.password);
+      if (!isMatch) {
+          return res.status(400).json({ message: 'Email atau password salah!' });
+      }
+
+      // Prepare user data to include in the token
+      const userData = {
+          id_user: user.id_user,
+          nama: user.nama,
+          email: user.email,
+          dob: user.dob,
+          gender: user.gender,
+          role: user.role,
+      };
+
+      // Sign the token with the user data
+      jwt.sign({ user: userData }, 'your_jwt_secret', { expiresIn: '1h' }, (err, token) => {
+          if (err) {
+              console.error(err.message);
+              return res.status(500).json({ message: 'Server Error' });
+          }
+          res.status(200).json({ token, user: userData });
+      });
   } catch (error) {
-    console.error(error.message);
-    res.status(500).json({ message: "Server Error" });
+      console.error('Server error:', error.message);
+      res.status(500).json({ message: 'Server Error' });
   }
 });
-
 //tambah saldo
 router.post("/user/saldo", async (req, res) => {
   const { token, saldoToAdd } = req.body;
@@ -328,5 +323,6 @@ router.delete("/user/:id", async (req, res) => {
     res.status(500).json({ message: "Server Error" });
   }
 });
+
 
 module.exports = router;

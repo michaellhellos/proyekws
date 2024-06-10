@@ -53,3 +53,4 @@ INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, isbn) VALUES
 ('1984', 'George Orwell', 'Secker & Warburg', 1949, '9780451524935'),
 ('The Catcher in the Rye', 'J.D. Salinger', 'Little, Brown and Company', 1951, '9780316769488');
 ALTER TABLE buku ADD COLUMN gambar VARCHAR(255);
+ALTER TABLE buku ADD COLUMN fotobuku VARCHAR(255);
