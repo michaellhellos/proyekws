@@ -5,6 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
 const jwt = require("jsonwebtoken");
+const Joi = require("joi").extend(require("@joi/date"));
 const User = require("../model/user"); // Adjust the path to your User model
 
 // Ensure the uploads directory exists
@@ -46,24 +47,45 @@ const upload = multer({
 });
 
 router.post("/register", upload.single("profile_image"), async (req, res) => {
-  const {
-    nama,
-    email,
-    password,
-    nomer_telepon,
-    dob,
-    gender,
-  } = req.body;
+  const { nama, email, password, nomer_telepon, dob, gender } = req.body;
 
-  // Common validation for all registrations
-  if (!nama || !email || !password || !nomer_telepon || !dob || !gender) {
-    return res.status(400).json({ message: "Field tidak boleh kosong!" });
+  const schema = Joi.object({
+    nama: Joi.string().required().messages({
+      "any.required": "Nama tidak boleh kosong!",
+    }),
+    email: Joi.string().email().required().messages({
+      "string.email": "Email tidak valid!",
+      "any.required": "Email tidak boleh kosong!",
+    }),
+    password: Joi.string().min(6).required().messages({
+      "string.min": "Password harus memiliki minimal 6 karakter!",
+      "any.required": "Password tidak boleh kosong!",
+    }),
+    nomer_telepon: Joi.string().required().messages({
+      "any.required": "Nomer telepon tidak boleh kosong!",
+    }),
+    dob: Joi.date().format("DD/MM/YYYY").required().messages({
+      "any.required": "Tanggal lahir tidak boleh kosong!",
+    }),
+    gender: Joi.string().valid("male", "female").required().messages({
+      "any.required": "Gender tidak boleh kosong!",
+      "any.only": 'Gender harus berupa "male" atau "female"!',
+    }),
+  });
+
+  try {
+    await schema.validateAsync({
+      ...req.body,
+    });
+  } catch (error) {
+    let statusCode = 400;
+    return res.status(statusCode).send(error.toString());
   }
 
   const profileImage = req.file ? req.file.filename : null;
 
   // Determine role based on profile image presence
-  const role = profileImage ? 'anggota' : 'admin';
+  const role = profileImage ? "anggota" : "admin";
 
   try {
     // Log the input data for debugging
@@ -93,10 +115,14 @@ router.post("/register", upload.single("profile_image"), async (req, res) => {
       profile_image: profileImage, // Save the file name in the database if it exists
     });
 
-    if (role === 'anggota') {
-      res.status(201).json({ message: `Selamat, email ${user.email} terdaftar sebagai anggota!` });
+    if (role === "anggota") {
+      res.status(201).json({
+        message: `Selamat, email ${user.email} terdaftar sebagai anggota!`,
+      });
     } else {
-      res.status(201).json({ message: `Selamat, email ${user.email} terdaftar dengan role admin!` });
+      res.status(201).json({
+        message: `Selamat, email ${user.email} terdaftar dengan role admin!`,
+      });
     }
   } catch (error) {
     // Log the error for debugging
@@ -154,7 +180,8 @@ router.post("/login", async (req, res) => {
 router.post("/user/saldo", async (req, res) => {
   const { token, saldoToAdd } = req.body;
 
-  if (!token || saldoToAdd == null) { // Check for null as well as undefined
+  if (!token || saldoToAdd == null) {
+    // Check for null as well as undefined
     return res.status(400).json({ message: "Field tidak boleh kosong!" });
   }
 
@@ -171,7 +198,9 @@ router.post("/user/saldo", async (req, res) => {
       // Convert saldoToAdd to a number
       const saldoToAddNumber = parseFloat(saldoToAdd);
       if (isNaN(saldoToAddNumber)) {
-        return res.status(400).json({ message: "Saldo to add harus berupa angka!" });
+        return res
+          .status(400)
+          .json({ message: "Saldo to add harus berupa angka!" });
       }
 
       try {
@@ -183,7 +212,7 @@ router.post("/user/saldo", async (req, res) => {
           saldo: parseFloat(user.saldo).toFixed(2), // Format saldo to two decimal places
         });
       } catch (error) {
-        console.error('Error adding saldo:', error.message);
+        console.error("Error adding saldo:", error.message);
         res.status(500).json({ message: "Error adding saldo" });
       }
     });
