@@ -54,3 +54,13 @@ INSERT INTO buku (judul, penulis, penerbit, tahun_terbit, isbn) VALUES
 ('The Catcher in the Rye', 'J.D. Salinger', 'Little, Brown and Company', 1951, '9780316769488');
 ALTER TABLE buku ADD COLUMN gambar VARCHAR(255);
 ALTER TABLE buku ADD COLUMN fotobuku VARCHAR(255);
+
+CREATE TABLE pinjaman (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    buku_id INT NOT NULL,
+    tanggal_pinjam DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    tanggal_kembali DATETIME,
+    FOREIGN KEY (user_id) REFERENCES user(id_user),
+    FOREIGN KEY (buku_id) REFERENCES buku(id_buku)
+);
