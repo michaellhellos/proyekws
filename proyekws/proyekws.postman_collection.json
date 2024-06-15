@@ -2,7 +2,7 @@
 	"info": {
 		"_postman_id": "db0131bc-56a0-4d49-88e6-eb9fa291bc74",
 		"name": "proyekws",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
 		"_exporter_id": "32821763"
 	},
 	"item": [
@@ -54,17 +54,7 @@
 								}
 							]
 						},
-						"url": {
-							"raw": "localhost:3000/api/register",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"register"
-							]
-						}
+						"url": "localhost:3000/api/register"
 					},
 					"response": []
 				},
@@ -82,19 +72,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/admin/buku/add",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"admin",
-								"buku",
-								"add"
-							]
-						}
+						"url": "localhost:3000/api/admin/buku/add"
 					},
 					"response": []
 				},
@@ -175,17 +153,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/users",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"users"
-							]
-						}
+						"url": "localhost:3000/api/users"
 					},
 					"response": []
 				}
@@ -199,18 +167,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/buku/list",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"buku",
-								"list"
-							]
-						}
+						"url": "localhost:3000/api/buku/list"
 					},
 					"response": []
 				},
@@ -228,18 +185,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/user/add-saldo",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"user",
-								"add-saldo"
-							]
-						}
+						"url": "localhost:3000/api/user/add-saldo"
 					},
 					"response": []
 				},
@@ -257,18 +203,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/user/beli-api-hit",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"user",
-								"beli-api-hit"
-							]
-						}
+						"url": "localhost:3000/api/user/beli-api-hit"
 					},
 					"response": []
 				},
@@ -286,18 +221,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/buku/pinjam",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"buku",
-								"pinjam"
-							]
-						}
+						"url": "localhost:3000/api/buku/pinjam"
 					},
 					"response": []
 				},
@@ -315,15 +239,45 @@
 								}
 							}
 						},
+						"url": "localhost:3000/api/kembalikan-buku"
+					},
+					"response": []
+				},
+				{
+					"name": "undo_buku",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjUsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTE4QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSJ9LCJpYXQiOjE3MTgxMTE0MTIsImV4cCI6MTcxODExNTAxMn0.kyH0FZkCSW2tOgiCOmUDGDidX8pswAhXUFYTupmjv0o"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTRAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhbmdnb3RhIn0sImlhdCI6MTcxODExNDU5MiwiZXhwIjoxNzE4MTE4MTkyfQ.E10KwRczreMGPRt5FFG2emkZ3uXp6js6oRZOlUw98eQ\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
 						"url": {
-							"raw": "localhost:3000/api/kembalikan-buku",
+							"raw": "localhost:3000/api/download-buku/:id",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"api",
-								"kembalikan-buku"
+								"download-buku",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "19"
+								}
 							]
 						}
 					},
@@ -363,17 +317,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/Login",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Login"
-							]
-						}
+						"url": "localhost:3000/api/Login"
 					},
 					"response": []
 				}

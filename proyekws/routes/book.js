@@ -237,14 +237,14 @@ router.post('/kembalikan-buku', async (req, res) => {
 });
 router.post('/download-buku/:id', async (req, res) => {
     const bukuId = req.params.id;
-    const { token } = req.body; // Mengambil token dari body permintaan
+    const { token } = req.body; // Get the token from the request body
 
     if (!token) {
         return res.status(401).json({ message: 'Token tidak diberikan' });
     }
 
     try {
-        const decoded = jwt.verify(token, 'your_jwt_secret');
+        const decoded = jwt.verify(token, 'your_jwt_secret'); // Verify the JWT token
 
         if (!decoded || !decoded.user) {
             return res.status(401).json({ message: 'Token tidak valid' });
@@ -253,34 +253,42 @@ router.post('/download-buku/:id', async (req, res) => {
         const userId = decoded.user.id_user;
         console.log(`User ID from token: ${userId}`);
 
+        // Fetch user by ID
         const user = await User.findByPk(userId);
         if (!user) {
             return res.status(404).json({ message: 'Pengguna tidak ditemukan' });
         }
 
+        // Fetch book by ID
         const buku = await Buku.findByPk(bukuId);
         if (!buku) {
             return res.status(404).json({ message: 'Buku tidak ditemukan' });
         }
 
+        // Check if the book has an associated file
         if (!buku.fotobuku) {
             return res.status(404).json({ message: 'Buku tidak memiliki file fotobuku' });
         }
 
+        // Check if the user has borrowed the book
         const pinjaman = await Pinjaman.findOne({ where: { user_id: userId, buku_id: bukuId } });
         if (!pinjaman) {
             return res.status(403).json({ message: 'Anda belum meminjam buku ini' });
         }
 
-        const filePath = path.join(__dirname, 'uploads', buku.fotobuku);
+        // Construct the file path
+        const filePath = path.join(__dirname, '../uploads', buku.fotobuku);
         if (!fs.existsSync(filePath)) {
+            console.error(`File not found: ${filePath}`);
             return res.status(404).json({ message: 'File fotobuku tidak ditemukan' });
         }
 
-        // Kirim file sebagai respons dengan header Content-Disposition
+        console.log(`Sending file: ${filePath}`);
+
+        // Send the file as a response with the appropriate headers
         res.setHeader('Content-Disposition', `attachment; filename=${buku.fotobuku}`);
         res.sendFile(filePath);
-        
+
     } catch (error) {
         console.error('Error:', error.message);
         if (error.name === 'JsonWebTokenError') {
