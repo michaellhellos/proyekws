@@ -69,11 +69,11 @@ router.post('/admin/explore/add', async(req, res) =>{
         let newBook = await Buku.create({
             judul: findManga.data.data.title,
             penulis: findManga.data.data.authors[0],
-            tahun_terbit: Buku.getYearFromUnixTime(findManga.data.data.create_at)
+            tahun_terbit: Buku.getYearFromUnixTime(findManga.data.data.create_at),
+            gambar: findManga.data.data.thumb
         })
         return res.status(201).json({message: `Buku dengan judul ${newBook.judul} berhasil ditambahkan kedalam database!`})
     } catch(err){
-        console.log(err)
         return res.status(400).json(err)
     }
 })
