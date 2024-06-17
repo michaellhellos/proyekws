@@ -14,7 +14,7 @@ router.get('/admin/explore/list', async(req, res)=>{
     let token = req.header('x-auth-token')
     try{
         let dataUser = jwt.verify(token, 'your_jwt_secret')
-        let adminChecker = await User.checkAdmin(dataUser.id_user)
+        let adminChecker = await User.checkAdmin(dataUser.user.id_user)
         if(!adminChecker){
             return res.status(403).json({message: "Access denied!"})
         }
@@ -43,7 +43,7 @@ router.post('/admin/explore/add', async(req, res) =>{
     let id = req.body.id
     try{
         let dataUser = jwt.verify(token, 'your_jwt_secret')
-        let adminChecker = await User.checkAdmin(dataUser.id_user)
+        let adminChecker = await User.checkAdmin(dataUser.user.id_user)
         if(!adminChecker){
             return res.status(403).json({message: "Access denied!"})
         }
