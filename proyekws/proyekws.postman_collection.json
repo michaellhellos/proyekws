@@ -1,16 +1,303 @@
 {
 	"info": {
-		"_postman_id": "db0131bc-56a0-4d49-88e6-eb9fa291bc74",
-		"name": "proyekws",
-		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
-		"_exporter_id": "32821763"
+		"_postman_id": "f8623a45-fadf-4901-97e6-9ca92495bc9b",
+		"name": "ProyekWS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33380369"
 	},
 	"item": [
 		{
-			"name": "admin",
+			"name": "Admin",
 			"item": [
 				{
-					"name": "register_admin",
+					"name": "Tambah_Buku",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"judul\": \"Membuat Aplikasi Web dengan Node.js\",\r\n    \"penulis\": \"Michael Gunawan\",\r\n    \"penerbit\": \"Gunawan Publishing\",\r\n    \"tahun_terbit\": 2022,\r\n    \"isbn\": \"978-1234567890\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjEsIm5hbWEiOiJKb2huIERvZSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6InVzZXIifSwiaWF0IjoxNzE0OTU5NDU1LCJleHAiOjE3MTQ5NjMwNTV9.udEWJgoCphrFFjgCM_PsihAKktktVePFPX3eok21m04\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/admin/buku/add",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"admin",
+								"buku",
+								"add"
+							]
+						},
+						"description": "Request ini hanya dapat dilakukan oleh Admin yang di mana Admin dapat melakukan penambahan Buku di dalam sistem perpustakaan. Dan jika sudah selesai di tambahakan oleh Admin maka Anggota dapat melihat Buku yang sudah di tambahkan oleh Admin"
+					},
+					"response": []
+				},
+				{
+					"name": "Hapus_Buku",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjMsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWltaUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6ImFkbWluIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1NDA2MSwiZXhwIjoxNzE1MDU3NjYxfQ.WntRrdb8Cs2NddxVYN9sKwshbbT46mi7sdPyx7cXVIg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/hapus-buku/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"hapus-buku",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request hanya dapat digunakan oleh Admin untuk menghapus Buku yang sudah terdaftar di dalam sistem, dan saat Admin sudah melakukan penghapusan data Buku pada sistem. Buku yang di hapus oleh Admin tidak akan keluar lagi di Anggota"
+					},
+					"response": []
+				},
+				{
+					"name": "Update_Buku",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"judul\": \"simanis dari pinggir kali\",\r\n    \"penulis\": \"meme\",\r\n    \"penerbit\": \"michaell \",\r\n    \"tahun_terbit\": 2003,\r\n    \"isbn\": \"9780061120090\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjozLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1pbWlAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTA5MzYyNCwiZXhwIjoxNzE1MDk3MjI0fQ.DuZKhc8_9lG7S9k-VjPq1ONjS2bVl8-dAXB_in4j2hc\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/admin/buku/update/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"admin",
+								"buku",
+								"update",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						},
+						"description": "Request ini hanya dapat digunakan oleh Admin yang di mana Reqeust ini berfungsi untuk melakukan penggantian data dari Buku yang sudah terdaftar di dalam sistem."
+					},
+					"response": []
+				},
+				{
+					"name": "List_User",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/users",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"users"
+							]
+						},
+						"description": "Request ini dapat digunakan hanya oleh Admin untuk dapat melihat semua User yang sudah melakukan Register, baik User yang register adalah Admin ataupun User yang Regsiter sebagai Anggota."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Anggota",
+			"item": [
+				{
+					"name": "List_Buku",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/buku/list",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"buku",
+								"list"
+							]
+						},
+						"description": "Request ini dapat dilakukan baik oleh User yang login sebagai Admin maupun User yang login sebagai Anggota. Request ini digunakan oleh User untuk dapat melihat semua daftar Buku yang sudah di daftarkan oleh Admin ke dalam sistem."
+					},
+					"response": []
+				},
+				{
+					"name": "TopUp",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoyLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1lbWU0QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSIsImlhdCI6MTcxNzg1NzQ0MiwiZXhwIjoxNzE3ODYxMDQyfQ.NaWboHKrBKY0pqvL4FWjje0A-QjVTNwJeRTSql7UoWk\",\r\n    \"saldoToAdd\": 1000.00\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/user/add-saldo",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"add-saldo"
+							]
+						},
+						"description": "Request ini diggunakan oleh User yang login sebagai Anggota di mana User melakukan penambahan saldo yang di dapat di gunakan untuk dapat melakukan pembelian Member maupun untuk melakukan pembelian Buku"
+					},
+					"response": []
+				},
+				{
+					"name": "Membership",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n   \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxMCwibmFtYSI6Im1pY2hhZWxsIiwiZW1haWwiOiJvYmVydEBnbWFpbC5jb20iLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoiIiwicm9sZSI6ImFuZ2dvdGEiLCJpYXQiOjE3MTU3MzIyNTQsImV4cCI6MTcxNTczNTg1NH0.8ed7e1Lu1-tRVANT-cTGr0npLUmYUmkaPfVQSfFutA8\",\r\n    \"apihit\": 15\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/user/beli-api-hit",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"user",
+								"beli-api-hit"
+							]
+						},
+						"description": "Request ini dapat digunakan oleh Anggota untuk dapat membeli Membership di perpustakaan tersebut, di mana Membership ini digunakan Anggota untuk dapat mendapatkan discon untuk pembelian Buku di perpustakaan"
+					},
+					"response": []
+				},
+				{
+					"name": "Beli_Buku",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"id_buku\": 1\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/buku/pinjam",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"buku",
+								"pinjam"
+							]
+						},
+						"description": "Request ini digunakan oleh User Anggota untuk dapat melakukan pembelian buku yang ada didalam sistem perpustakaan."
+					},
+					"response": []
+				},
+				{
+					"name": "Download_Buku",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjUsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTE4QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSJ9LCJpYXQiOjE3MTgxMTE0MTIsImV4cCI6MTcxODExNTAxMn0.kyH0FZkCSW2tOgiCOmUDGDidX8pswAhXUFYTupmjv0o"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{ \r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTRAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhbmdnb3RhIn0sImlhdCI6MTcxODExNDU5MiwiZXhwIjoxNzE4MTE4MTkyfQ.E10KwRczreMGPRt5FFG2emkZ3uXp6js6oRZOlUw98eQ\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "localhost:3000/api/download-buku/:id",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"download-buku",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "19"
+								}
+							]
+						},
+						"description": "Request ini digunakan oleh User Anggota untuk dapat melakukan Downlaod Buku yang sudah di beli oleh Anggota melalui Request Beli_Buku"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Login/Register",
+			"item": [
+				{
+					"name": "Register",
 					"request": {
 						"method": "POST",
 						"header": [],
@@ -54,250 +341,23 @@
 								}
 							]
 						},
-						"url": "localhost:3000/api/register"
-					},
-					"response": []
-				},
-				{
-					"name": "admin_tambah_buku",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"judul\": \"Membuat Aplikasi Web dengan Node.js\",\r\n    \"penulis\": \"Michael Gunawan\",\r\n    \"penerbit\": \"Gunawan Publishing\",\r\n    \"tahun_terbit\": 2022,\r\n    \"isbn\": \"978-1234567890\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjEsIm5hbWEiOiJKb2huIERvZSIsImVtYWlsIjoiam9obmRvZUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6InVzZXIifSwiaWF0IjoxNzE0OTU5NDU1LCJleHAiOjE3MTQ5NjMwNTV9.udEWJgoCphrFFjgCM_PsihAKktktVePFPX3eok21m04\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/admin/buku/add"
-					},
-					"response": []
-				},
-				{
-					"name": "hapus_buku",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjMsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWltaUBnbWFpbC5jb20iLCJub21lcl90ZWxlcG9uIjoiMTIzNDU2Nzg5MCIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiJtYWxlIiwicm9sZSI6ImFkbWluIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1NDA2MSwiZXhwIjoxNzE1MDU3NjYxfQ.WntRrdb8Cs2NddxVYN9sKwshbbT46mi7sdPyx7cXVIg\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
 						"url": {
-							"raw": "localhost:3000/api/hapus-buku/:id",
+							"raw": "localhost:3000/api/register",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"api",
-								"hapus-buku",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
+								"register"
 							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update_buku",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"judul\": \"simanis dari pinggir kali\",\r\n    \"penulis\": \"meme\",\r\n    \"penerbit\": \"michaell \",\r\n    \"tahun_terbit\": 2003,\r\n    \"isbn\": \"9780061120090\",\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjozLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1pbWlAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTcxNTA5MzYyNCwiZXhwIjoxNzE1MDk3MjI0fQ.DuZKhc8_9lG7S9k-VjPq1ONjS2bVl8-dAXB_in4j2hc\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/admin/buku/update/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"admin",
-								"buku",
-								"update",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "1"
-								}
-							]
-						}
+						"description": "Request Register dapat melakukan register sebagai Admin dan juga sebagai Anggota. Yang mendakan antara register sebagai Admin dan Anggota adalah Admin tidak memerlukan untuk melakukan upload Foto, sedangkan Anggota harus melakukan upload foto"
 					},
 					"response": []
 				},
 				{
-					"name": "liat_yang sudah_daftar",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "localhost:3000/api/users"
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "anggota",
-			"item": [
-				{
-					"name": "liatbuku",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": "localhost:3000/api/buku/list"
-					},
-					"response": []
-				},
-				{
-					"name": "tambah_saldo",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoyLCJuYW1hIjoibWljaGFlbGwiLCJlbWFpbCI6Im1lbWU0QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSIsImlhdCI6MTcxNzg1NzQ0MiwiZXhwIjoxNzE3ODYxMDQyfQ.NaWboHKrBKY0pqvL4FWjje0A-QjVTNwJeRTSql7UoWk\",\r\n    \"saldoToAdd\": 1000.00\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/user/add-saldo"
-					},
-					"response": []
-				},
-				{
-					"name": "member",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n   \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZF91c2VyIjoxMCwibmFtYSI6Im1pY2hhZWxsIiwiZW1haWwiOiJvYmVydEBnbWFpbC5jb20iLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoiIiwicm9sZSI6ImFuZ2dvdGEiLCJpYXQiOjE3MTU3MzIyNTQsImV4cCI6MTcxNTczNTg1NH0.8ed7e1Lu1-tRVANT-cTGr0npLUmYUmkaPfVQSfFutA8\",\r\n    \"apihit\": 15\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/user/beli-api-hit"
-					},
-					"response": []
-				},
-				{
-					"name": "buku_pinjam",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"id_buku\": 1\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/buku/pinjam"
-					},
-					"response": []
-				},
-				{
-					"name": "kembalikan_buku",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJrZWx1biIsImVtYWlsIjoia2VsdW5AZ21haWwuY29tIiwibm9tZXJfdGVsZXBvbiI6IjEyMzQ1Njc4OTAiLCJkb2IiOiIxOTkwLTAxLTAxIiwiZ2VuZGVyIjoibWFsZSIsInJvbGUiOiJ1c2VyIiwic2FsZG8iOjEwMH0sImlhdCI6MTcxNTA1MzIzOSwiZXhwIjoxNzE1MDU2ODM5fQ.BmYLxwG7ZVsUgaSMwJi20KgeQuMrctexdsghXe2flTM\",\r\n    \"id_buku\": 1\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": "localhost:3000/api/kembalikan-buku"
-					},
-					"response": []
-				},
-				{
-					"name": "undo_buku",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Authorization",
-								"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjUsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTE4QGdtYWlsLmNvbSIsImRvYiI6IjE5OTAtMDEtMDEiLCJnZW5kZXIiOiIiLCJyb2xlIjoiYW5nZ290YSJ9LCJpYXQiOjE3MTgxMTE0MTIsImV4cCI6MTcxODExNTAxMn0.kyH0FZkCSW2tOgiCOmUDGDidX8pswAhXUFYTupmjv0o"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{ \r\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkX3VzZXIiOjIsIm5hbWEiOiJtaWNoYWVsbCIsImVtYWlsIjoibWVtZTRAZ21haWwuY29tIiwiZG9iIjoiMTk5MC0wMS0wMSIsImdlbmRlciI6IiIsInJvbGUiOiJhbmdnb3RhIn0sImlhdCI6MTcxODExNDU5MiwiZXhwIjoxNzE4MTE4MTkyfQ.E10KwRczreMGPRt5FFG2emkZ3uXp6js6oRZOlUw98eQ\"\r\n}\r\n",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "localhost:3000/api/download-buku/:id",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"download-buku",
-								":id"
-							],
-							"variable": [
-								{
-									"key": "id",
-									"value": "19"
-								}
-							]
-						}
-					},
-					"response": []
-				}
-			]
-		},
-		{
-			"name": "login/register",
-			"item": [
-				{
-					"name": "register",
-					"request": {
-						"method": "POST",
-						"header": []
-					},
-					"response": []
-				},
-				{
-					"name": "login",
+					"name": "Login",
 					"request": {
 						"method": "POST",
 						"header": [
@@ -317,7 +377,18 @@
 								}
 							}
 						},
-						"url": "localhost:3000/api/Login"
+						"url": {
+							"raw": "localhost:3000/api/Login",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"Login"
+							]
+						},
+						"description": "Request Login digunakan untuk User baik Admin maupun Anggota agar dapat menggunakan API yang sudah di asssign untuk masing masing role.\n\nRole Admin dapat melakukan :\n\n- Penambahan Buku\n    \n- Pengurangna Buku\n    \n- Update Buku\n    \n- Dapat Melihat semua User yang sudah melakukan Register. Baik dari Admin maupun dari Anggota\n    \n\nRole Anggota dapat melakukan :\n\n- Melihat Semua Buku yang sudah di tambahakan oleh Admin\n    \n- Melakukan TopUp Saldo\n    \n- Membuat Membership bagi Anggota yang sedang Login\n    \n- Melakukan peminjaman buku\n    \n- Download buku yang sedang di pinjam dari perpustakaan"
 					},
 					"response": []
 				}
