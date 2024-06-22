@@ -10,6 +10,17 @@
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.9.4",
     "nodemon": "^3.1.0",
-    "sequelize": "^6.37.3"
-  }
+    "sequelize": "^6.37.3",
+    "sequelize-cli": "^6.6.2"
+  },
+  "name": "proyekws",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
 }

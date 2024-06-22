@@ -24,7 +24,7 @@ ReviewBuku.init({
     allowNull: false,
     references: {
       model: Anggota,
-      key: 'id_anggota'
+      key: 'id_user'
     }
   },
   rating: {
@@ -52,7 +52,9 @@ ReviewBuku.init({
   sequelize,
   modelName: 'ReviewBuku',
   tableName: 'review_buku',
-  timestamps: true // Menggunakan timestamps
+  timestamps: true,
+  createdAt: 'created_at',
+  updatedAt: 'updated_at'
 });
 
 module.exports = ReviewBuku;

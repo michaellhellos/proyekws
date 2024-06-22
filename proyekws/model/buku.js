@@ -28,9 +28,8 @@ class Buku extends Model {
 Buku.init({
     id_buku: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
+        autoIncrement: true
     },
     judul: {
         type: DataTypes.STRING,
@@ -42,34 +41,27 @@ Buku.init({
     },
     penerbit: {
         type: DataTypes.STRING,
-        allowNull: true
+        allowNull: false
     },
     tahun_terbit: {
         type: DataTypes.INTEGER,
-        allowNull: true,
-        validate: {
-            isInt: true,
-            min: 1000,
-            max: new Date().getFullYear()
-        }
+        allowNull: false
     },
     isbn: {
         type: DataTypes.STRING,
-        allowNull: true,
-        unique: true
+        allowNull: false
     },
     gambar: {
-        type: DataTypes.STRING,
-        allowNull: true
+        type: DataTypes.STRING
     },
     fotobuku: {
-        type: DataTypes.STRING,
-        allowNull: true
+        type: DataTypes.STRING
     }
 }, {
     sequelize: db,
+    modelName: 'Buku', // Nama model harus sesuai dengan nama yang Anda gunakan di aplikasi Anda
     tableName: 'buku',
-    timestamps: false
+    timestamps: false // Jika Anda tidak menggunakan timestamps createdAt dan updatedAt
 });
 
 Buku.updateBuku = async (bukuId, updatedData) => {

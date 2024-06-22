@@ -1,9 +1,9 @@
 {
 	"info": {
-		"_postman_id": "f8623a45-fadf-4901-97e6-9ca92495bc9b",
+		"_postman_id": "c58b050d-43bd-4a6c-85dc-9641da8ef0fe",
 		"name": "ProyekWS",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "33380369"
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "32821763"
 	},
 	"item": [
 		{
@@ -23,19 +23,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/admin/buku/add",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"admin",
-								"buku",
-								"add"
-							]
-						},
+						"url": "localhost:3000/api/admin/buku/add",
 						"description": "Request ini hanya dapat dilakukan oleh Admin yang di mana Admin dapat melakukan penambahan Buku di dalam sistem perpustakaan. Dan jika sudah selesai di tambahakan oleh Admin maka Anggota dapat melihat Buku yang sudah di tambahkan oleh Admin"
 					},
 					"response": []
@@ -119,18 +107,109 @@
 					"request": {
 						"method": "GET",
 						"header": [],
+						"url": "localhost:3000/api/users",
+						"description": "Request ini dapat digunakan hanya oleh Admin untuk dapat melihat semua User yang sudah melakukan Register, baik User yang register adalah Admin ataupun User yang Regsiter sebagai Anggota."
+					},
+					"response": []
+				},
+				{
+					"name": "nambah_genre_buku",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "localhost:3000/api/admin/tambah-genre",
+						"description": "kita bisa memasukan ganre buku nya lewat table many to many nya ke dalam buku nya"
+					},
+					"response": []
+				},
+				{
+					"name": "update_genre",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id_buku\": 2,    // Ganti dengan ID buku yang ingin ditambahkan genre\r\n    \"id_genre\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/admin/update-genre"
+					},
+					"response": []
+				},
+				{
+					"name": "genre",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"tipe_genre\":\"kelunbaikhati\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "localhost:3000/api/genre",
+						"description": "kita bisa menambhakan genre baru"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_genre",
+					"request": {
+						"method": "DELETE",
+						"header": [],
 						"url": {
-							"raw": "localhost:3000/api/users",
+							"raw": "localhost:3000/api/genre/:id_genre",
 							"host": [
 								"localhost"
 							],
 							"port": "3000",
 							"path": [
 								"api",
-								"users"
+								"genre",
+								":id_genre"
+							],
+							"variable": [
+								{
+									"key": "id_genre",
+									"value": ""
+								}
 							]
 						},
-						"description": "Request ini dapat digunakan hanya oleh Admin untuk dapat melihat semua User yang sudah melakukan Register, baik User yang register adalah Admin ataupun User yang Regsiter sebagai Anggota."
+						"description": "kita bisa melakuakn delete genre nya"
+					},
+					"response": []
+				},
+				{
+					"name": "update_genre",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/genre/:id_genre",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"genre",
+								":id_genre"
+							],
+							"variable": [
+								{
+									"key": "id_genre",
+									"value": ""
+								}
+							]
+						},
+						"description": "kita bisa melakukan update genre nya"
 					},
 					"response": []
 				}
@@ -144,18 +223,7 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"url": {
-							"raw": "localhost:3000/api/buku/list",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"buku",
-								"list"
-							]
-						},
+						"url": "localhost:3000/api/buku/list",
 						"description": "Request ini dapat dilakukan baik oleh User yang login sebagai Admin maupun User yang login sebagai Anggota. Request ini digunakan oleh User untuk dapat melihat semua daftar Buku yang sudah di daftarkan oleh Admin ke dalam sistem."
 					},
 					"response": []
@@ -174,18 +242,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/user/add-saldo",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"user",
-								"add-saldo"
-							]
-						},
+						"url": "localhost:3000/api/user/add-saldo",
 						"description": "Request ini diggunakan oleh User yang login sebagai Anggota di mana User melakukan penambahan saldo yang di dapat di gunakan untuk dapat melakukan pembelian Member maupun untuk melakukan pembelian Buku"
 					},
 					"response": []
@@ -204,18 +261,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/user/beli-api-hit",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"user",
-								"beli-api-hit"
-							]
-						},
+						"url": "localhost:3000/api/user/beli-api-hit",
 						"description": "Request ini dapat digunakan oleh Anggota untuk dapat membeli Membership di perpustakaan tersebut, di mana Membership ini digunakan Anggota untuk dapat mendapatkan discon untuk pembelian Buku di perpustakaan"
 					},
 					"response": []
@@ -234,18 +280,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/buku/pinjam",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"buku",
-								"pinjam"
-							]
-						},
+						"url": "localhost:3000/api/buku/pinjam",
 						"description": "Request ini digunakan oleh User Anggota untuk dapat melakukan pembelian buku yang ada didalam sistem perpustakaan."
 					},
 					"response": []
@@ -288,6 +323,82 @@
 							]
 						},
 						"description": "Request ini digunakan oleh User Anggota untuk dapat melakukan Downlaod Buku yang sudah di beli oleh Anggota melalui Request Beli_Buku"
+					},
+					"response": []
+				},
+				{
+					"name": "liat_riview",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "localhost:3000/api//buku/listriview",
+						"description": "kita bisa melihat semua riview"
+					},
+					"response": []
+				},
+				{
+					"name": "riview",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": "localhost:3000/api/buku/review",
+						"description": "kita bisa memasukan riview nya dengan cara memasukan id buku nya dan id pengguna nya"
+					},
+					"response": []
+				},
+				{
+					"name": "update_riview",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/buku/review/:id_review",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"buku",
+								"review",
+								":id_review"
+							],
+							"variable": [
+								{
+									"key": "id_review",
+									"value": ""
+								}
+							]
+						},
+						"description": "kita bisa melakuakn update riview"
+					},
+					"response": []
+				},
+				{
+					"name": "delete_riview",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "localhost:3000/api/buku/review/:id_review",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"buku",
+								"review",
+								":id_review"
+							],
+							"variable": [
+								{
+									"key": "id_review",
+									"value": ""
+								}
+							]
+						},
+						"description": "kita bisa melakukan delete riview"
 					},
 					"response": []
 				}
@@ -341,17 +452,7 @@
 								}
 							]
 						},
-						"url": {
-							"raw": "localhost:3000/api/register",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"register"
-							]
-						},
+						"url": "localhost:3000/api/register",
 						"description": "Request Register dapat melakukan register sebagai Admin dan juga sebagai Anggota. Yang mendakan antara register sebagai Admin dan Anggota adalah Admin tidak memerlukan untuk melakukan upload Foto, sedangkan Anggota harus melakukan upload foto"
 					},
 					"response": []
@@ -377,17 +478,7 @@
 								}
 							}
 						},
-						"url": {
-							"raw": "localhost:3000/api/Login",
-							"host": [
-								"localhost"
-							],
-							"port": "3000",
-							"path": [
-								"api",
-								"Login"
-							]
-						},
+						"url": "localhost:3000/api/Login",
 						"description": "Request Login digunakan untuk User baik Admin maupun Anggota agar dapat menggunakan API yang sudah di asssign untuk masing masing role.\n\nRole Admin dapat melakukan :\n\n- Penambahan Buku\n    \n- Pengurangna Buku\n    \n- Update Buku\n    \n- Dapat Melihat semua User yang sudah melakukan Register. Baik dari Admin maupun dari Anggota\n    \n\nRole Anggota dapat melakukan :\n\n- Melihat Semua Buku yang sudah di tambahakan oleh Admin\n    \n- Melakukan TopUp Saldo\n    \n- Membuat Membership bagi Anggota yang sedang Login\n    \n- Melakukan peminjaman buku\n    \n- Download buku yang sedang di pinjam dari perpustakaan"
 					},
 					"response": []

@@ -9,6 +9,134 @@ const axios = require('axios')
 const path = require('path');
 const upload = require('../config/multer.js');
 const Pinjaman = require('../model/pinjaman');
+const BukuGenre = require('../model/buku_genre');
+const Genre = require('../model/genre');
+
+
+router.post('/genre', async (req, res) => {
+    const { tipe_genre } = req.body;
+
+    try {
+        // Buat genre baru menggunakan model Genre
+        const genre = await Genre.create({ tipe_genre });
+
+        res.status(201).json({ message: 'Tipe genre berhasil ditambahkan', genre });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Gagal menambahkan tipe genre' });
+    }
+});
+//delete
+router.delete('/genre/:id_genre', async (req, res) => {
+    const { id_genre } = req.params;
+
+    try {
+        // Cari genre berdasarkan id_genre
+        const genre = await Genre.findByPk(id_genre);
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre tidak ditemukan' });
+        }
+
+        // Hapus genre
+        await genre.destroy();
+
+        res.status(200).json({ message: 'Genre berhasil dihapus' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Gagal menghapus genre' });
+    }
+});
+//update
+router.put('/genre/:id_genre', async (req, res) => {
+    const { id_genre } = req.params;
+    const { tipe_genre } = req.body;
+
+    try {
+        // Cari genre berdasarkan id_genre
+        let genre = await Genre.findByPk(id_genre);
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre tidak ditemukan' });
+        }
+
+        // Lakukan pembaruan data genre
+        genre.tipe_genre = tipe_genre; // Update field tipe_genre
+
+        // Simpan perubahan ke database
+        await genre.save();
+
+        res.status(200).json({ message: 'Genre berhasil diperbarui', genre });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Gagal memperbarui genre' });
+    }
+});
+
+//nambah genre
+router.post('/admin/tambah-genre', async (req, res) => {
+    const { id_buku, id_genre } = req.body;
+
+    try {
+        // Cari buku berdasarkan id_buku
+        const buku = await Buku.findByPk(id_buku);
+        if (!buku) {
+            return res.status(404).json({ message: 'Buku tidak ditemukan' });
+        }
+
+        // Cari genre berdasarkan id_genre
+        const genre = await Genre.findByPk(id_genre);
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre tidak ditemukan' });
+        }
+
+        // Tambahkan genre ke buku menggunakan tabel buku_genre
+        await BukuGenre.create({
+            id_buku: id_buku,
+            id_genre: id_genre
+        });
+
+        res.status(201).json({ message: 'Genre berhasil ditambahkan ke buku' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+//update
+router.put('/admin/update-genre', async (req, res) => {
+    const { id_buku, id_genre } = req.body;
+
+    try {
+        // Cari buku berdasarkan id_buku
+        const buku = await Buku.findByPk(id_buku);
+        if (!buku) {
+            return res.status(404).json({ message: 'Buku tidak ditemukan' });
+        }
+
+        // Cari genre berdasarkan id_genre
+        const genre = await Genre.findByPk(id_genre);
+        if (!genre) {
+            return res.status(404).json({ message: 'Genre tidak ditemukan' });
+        }
+
+        // Perbarui atau tambahkan genre ke buku menggunakan tabel buku_genre
+        const [updated, updatedRows] = await BukuGenre.upsert({
+            id_buku: id_buku,
+            id_genre: id_genre
+        });
+
+        if (updatedRows === 0) {
+            return res.status(200).json({ message: 'Genre sudah ada pada buku' });
+        }
+
+        res.status(200).json({ message: 'Genre berhasil diperbarui pada buku' });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+
+
+
 //Endpoint untuk search buku dari rapid api
 router.get('/admin/explore/list', async(req, res)=>{
     let token = req.header('x-auth-token')
@@ -95,19 +223,132 @@ router.get('/buku/list', async (req, res) => {
     }
 });
 
-router.post('/buku/review', async (req, res) => {
+// router.post('/buku/review', async (req, res) => {
+//     const { id_buku, id_anggota, rating, komentar, token } = req.body;
+
+//     try {
+//         // Verifikasi token
+//         const decoded = jwt.verify(token, 'your_jwt_secret');
+
+//         // Buat review baru menggunakan model ReviewBuku
+//         const review = await ReviewBuku.create({
+//             id_buku,
+//             id_anggota,
+//             rating,
+//             komentar
+//         });
+
+//         res.status(201).json({ message: 'Review buku berhasil ditambahkan', review });
+//     } catch (error) {
+//         console.error(error.message);
+//         if (error.name === 'JsonWebTokenError') {
+//             return res.status(401).json({ message: 'Token tidak valid' });
+//         }
+//         res.status(500).json({ message: 'Server Error' });
+//     }
+// });
+router.delete('/buku/review/:id_review', async (req, res) => {
+    const { id_review } = req.params;
+    const { token } = req.body;
+
+    try {
+        // Verifikasi token
+        const decoded = jwt.verify(token, 'your_jwt_secret');
+
+        // Cari review berdasarkan id_review
+        const review = await ReviewBuku.findByPk(id_review);
+        if (!review) {
+            return res.status(404).json({ message: 'Review tidak ditemukan' });
+        }
+
+        // Hapus review
+        await review.destroy();
+
+        res.status(200).json({ message: 'Review buku berhasil dihapus' });
+    } catch (error) {
+        console.error(error.message);
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Token tidak valid' });
+        }
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+
+router.get('/buku/listriview', async (req, res) => {
+    try {
+        // Mengambil semua buku dari database menggunakan model Buku
+        const reviewBuku = await ReviewBuku.findAll();
+
+        // Mengembalikan data buku dalam respons
+        res.status(200).json({ reviewBuku });
+    } catch (error) {
+        console.error(error.message);
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+router.put('/buku/review/:id_review', async (req, res) => {
+    const { id_review } = req.params;
     const { id_buku, id_anggota, rating, komentar, token } = req.body;
 
     try {
         // Verifikasi token
         const decoded = jwt.verify(token, 'your_jwt_secret');
 
+        // Cari review berdasarkan id_review
+        const review = await ReviewBuku.findByPk(id_review);
+        if (!review) {
+            return res.status(404).json({ message: 'Review tidak ditemukan' });
+        }
+
+        // Update review dengan data yang baru
+        review.id_buku = id_buku !== undefined ? id_buku : review.id_buku;
+        review.id_anggota = id_anggota !== undefined ? id_anggota : review.id_anggota;
+        review.rating = rating !== undefined ? rating : review.rating;
+        review.komentar = komentar !== undefined ? komentar : review.komentar;
+
+        // Simpan perubahan
+        await review.save();
+
+        res.status(200).json({ message: 'Review buku berhasil diupdate', review });
+    } catch (error) {
+        console.error(error.message);
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({ message: 'Token tidak valid' });
+        }
+        res.status(500).json({ message: 'Server Error' });
+    }
+});
+router.post('/buku/review', async (req, res) => {
+    const { id_buku, id_anggota, rating, komentar, tanggal_review, token } = req.body;
+
+    // Debugging: Log request body
+    console.log(req.body);
+
+    // Validasi input
+    if (!id_buku || !id_anggota || rating === undefined || rating === null || rating < 1 || rating > 5) {
+        return res.status(400).json({ message: 'Data review tidak lengkap atau tidak valid' });
+    }
+
+    try {
+        // Verifikasi token
+        const decoded = jwt.verify(token, 'your_jwt_secret');
+
+        // Format tanggal_review
+        let formattedTanggalReview;
+        if (tanggal_review) {
+            const parts = tanggal_review.split('/'); // Format DD/MM/YYYY
+            formattedTanggalReview = new Date(parts[2], parts[1] - 1, parts[0]); // YYYY, MM, DD
+        } else {
+            formattedTanggalReview = new Date();
+        }
+
         // Buat review baru menggunakan model ReviewBuku
         const review = await ReviewBuku.create({
             id_buku,
             id_anggota,
             rating,
-            komentar
+            komentar,
+            tanggal_review: formattedTanggalReview // Pastikan format tanggal sesuai dengan yang diharapkan oleh Sequelize
         });
 
         res.status(201).json({ message: 'Review buku berhasil ditambahkan', review });
@@ -121,7 +362,7 @@ router.post('/buku/review', async (req, res) => {
 });
 
 //pinjam buku
-router.post('/buku/pinjam', async (req, res) => {
+router.post('/buku/beli', async (req, res) => {
     const { token, id_buku } = req.body;
 
     try {
